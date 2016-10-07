@@ -13,5 +13,4 @@ A 10MB snippet of the UVA Virtual Automata Simulator (VASim) binary, assumed to 
 
 [1] Kojm, T., M. Cathey, and C. Cordes. "ClamAV." https://www.clamav.net/downloads. (2004).
 
-## License
 
