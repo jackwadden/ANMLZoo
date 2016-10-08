@@ -17,7 +17,6 @@ Matt Grimm
 This suite was originally compiled by Jack Wadden (jackwadden@gmail.com). 
  
 If you use this benchmark suite in a publication, please use the following citation:
-Jack Wadden, Vinh Dang, Nathan Brunelle, Tommy Tracy II, Deyuan Guo, Elaheh Sadredini, Ke Wang, Chunkun Bo, Gabriel Robins, Mircea Stan, Kevin Skadron (University of Virginia)
 
 Wadden, J., Dang, V., Brunelle, N., Tracy II, T., Guo, D., Sadredini, E., Wang, K., Bo, C., Robins, G., Stan, M., and Skadron, S. "ANMLZoo: A Benchmark Suite for Exploring Bottlenecks in Automata Processing Engines and Architectures." 2016 IEEE International Symposium on Workload Characterization (IISWC'16). IEEE, 2016.
 
