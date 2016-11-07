@@ -1,0 +1,1 @@
+The PROSITE database from which the prosite signatures and corresponding automata are derived, and the UniProt fasta database from which the input sequences are taken are separately licensed. Please see the LICENSE files in the anml/ and inputs/ directories for license information and attribution for these sources.

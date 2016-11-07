@@ -1,0 +1,3 @@
+The Protomata input files are subsets or concatinations of the UniProt human proteome database located here http://www.uniprot.org/uniprot/?query=keyword:%22Complete%20proteome%20[KW-0181]%22&fil=organism%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22+AND+reviewed%3Ayes. The contents of the original files were not modified. 
+
+The license chosen by UniProt at http://www.uniprot.org/help/license is Attribution-NoDerivs 3.0 Unported (CC BY-ND 3.0) and can be found at the following link: https://creativecommons.org/licenses/by-nd/3.0/
