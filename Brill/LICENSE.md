@@ -1,5 +1,5 @@
 # Inputs
-The Brown Tagged Corpus (Form C) used to creat the inputs to this benchmark are licenced by the original authors. The copyright terms are below:
+The Brown Tagged Corpus (Form C) used to create the inputs to this benchmark are licenced by the original authors. The copyright terms are below:
 
 "The tagged Corpus is copyrighted in its entirety by W. N. Francis and Henry Kucera. Permission of one of the copyright holders must be obtained before any part of the tagged Corpus is reproduced in any form."
 
