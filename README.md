@@ -6,15 +6,15 @@ This paper presents ANMLZoo, a benchmark repository for automata-based applicati
 
 ## Benchmark Contributors
 
-Jack Wadden
-Vinh Dang
-Deyuan Guo
-Elaheh Sadredini
-Ke Wang
-Chunkun Bo
-Nathan Brunelle
-Tom Tracy II
-Matt Grimm
+Jack Wadden<br>
+Vinh Dang<br>
+Deyuan Guo<br>
+Elaheh Sadredini<br>
+Ke Wang<br>
+Chunkun Bo<br>
+Nathan Brunelle<br>
+Tom Tracy II<br>
+Matt Grimm<br>
 
 This suite was originally compiled by Jack Wadden (jackwadden@gmail.com). 
  
