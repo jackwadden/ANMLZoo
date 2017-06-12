@@ -1,6 +1,6 @@
 # ClamAV
 ## Description
-ClamAV is an open source repository of virus signatures available at https://www.clamav.net/downloads.
+ClamAV is an open source repository of virus signatures available at https://www.clamav.net/downloads. The ANML file for ClamAV is a subset of the full signature database. In particular, many signatures with large quantifiers (>64) are ignored and instead are treated as chains of STEs (no counter) by the Micron PCRE compiler.
 
 ## Inputs
 ### vasim_1MB.input
