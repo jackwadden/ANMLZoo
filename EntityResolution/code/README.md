@@ -103,7 +103,7 @@ $ python fileCombiner.py
 ### **csvExtractor.py**
 
 #### **Description**
-This script is made to extract data from a given csv file. For the data we used in this project, it was only necessary to target the data from one column of the source csv file, but this can be changed by adding another variable, to which you can append more data from a given csv file, if you find it necessary.
+This script is made to extract data from a given csv file. For the data we used in this project, it was only necessary to target the data from one column of the source csv file, but this can be changed by adding another variable, to which you can append more data from a given csv file, if you find it necessary. To run this file automatically over a whole directory's contents, use the dataIterator.sh script included in the code directory. Change the filepath in dataIterator.sh to fit your machine's filepath as necessary. 
 
 #### **Usage**
 To use the script, enter the following command into terminal:
