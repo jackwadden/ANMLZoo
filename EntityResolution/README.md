@@ -34,7 +34,7 @@ cluded for architecture-specific reasons and are not vital to the overall name-r
 ion process. Also, the “,” sign is a reporting state.
 
   
-   ![](images/er_image2.png?raw=true)
+   ![](images/er_image2_improved.png?raw=true)
 
 -This image provides an instructive example of a Hamming distance automaton. Note that \
 this automaton has the ability to recognize pieces of data with a Hamming distance of 0\
