@@ -1,6 +1,10 @@
 # ANMLZoo Automata Processing Benchmark Suite
 
-IMPORTANT: if using ANMLZoo for experiments, please see ERRATA below...
+*IMPORTANT:* if using ANMLZoo for experiments, please see ERRATA below...
+
+ANMLZoo is under continual development. Please make sure to use the proper [release](https://github.com/jackwadden/ANMLZoo/releases) for comparisons to prior work.
+
+If you have any questions or comments, please feel free to contact jackwadden@gmail.com or create an Issue ticket.
 
 ## Description
 High-performance automata-processing engines are traditionally evaluated using a limited set of regular expressionrulesets. While regular expression rulesets are valid real-world examples of use cases for automata processing, they represent a small proportion of all use cases for automata-based computing. With the recent availability of architectures and software frameworks for automata processing, many new applications have been found to benefit from automata processing. These show a wide variety of characteristics that differ from prior, popular regular-expression benchmarks, and these should be considered when designing new systems for automata processing.
