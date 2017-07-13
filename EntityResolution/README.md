@@ -22,7 +22,8 @@ es, which allows further customization when it comes to resolving approximate ma
 
 ### **Helpful and Instructive Images**
 
-   **INSERT PHOTO LINK 1 HERE**
+  
+   ![](images/er_image1.png?raw=true)
 
 -The above image demonstrates the general type of setup each automaton has in the Entit\
 y Resolution solver. Note that the automaton in this image does not implement fuzzy mat\
@@ -32,7 +33,8 @@ ching, which is used to solve Entity Resolution instances efficiently. Instead, 
 cluded for architecture-specific reasons and are not vital to the overall name-recognit\
 ion process. Also, the “,” sign is a reporting state.
 
-   **INSERT PHOTO LINK 2 HERE**
+  
+   ![](images/er_image2.png?raw=true)
 
 -This image provides an instructive example of a Hamming distance automaton. Note that \
 this automaton has the ability to recognize pieces of data with a Hamming distance of 0\
