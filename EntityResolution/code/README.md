@@ -1,5 +1,5 @@
 
-### **Automata Generator Scripts**
+# **Automata Generator Scripts**
 
 #### **name_generator.py**
 name_generator asks for five initial values: the number of total names, the number of first names, the number of last names, a random seed from which to generate first and last name combinations, and a name delimiter symbol. Note that the order each parameter is mentioned in the prior sentence is the order that each parameter should be entered in the command line.
