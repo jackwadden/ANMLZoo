@@ -125,6 +125,6 @@ To use the script, enter the following into terminal:
 ```
 $ python fileCombiner.py
 ```
-**Note:**the filepath will need to be edited to specifically fit the directory path one is 
+**Note:** the filepath will need to be edited to specifically fit the directory path one is 
 working with in order for the script to have its intended effect. Therefore, edit the path 
 to fit the directory path before running the script. 
