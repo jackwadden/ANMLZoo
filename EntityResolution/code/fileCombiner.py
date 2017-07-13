@@ -11,5 +11,5 @@ import os
 
 with open("all_output_names.txt","wb") as outputfile:
     for filename in os.listdir("last_names"):
-            with open('/home/mw223/Desktop/erFileGenerator/last_names/'+filename, "rb") as infile:
+            with open('/home/Documents/ANMLZoo/EntityResolution/code/last_names/'+filename, "rb") as infile:
                 outputfile.write(infile.read())

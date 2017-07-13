@@ -113,3 +113,18 @@ $ python csvExtractor.py <fileName.txt>
 where <fileName.txt> is the desired file you wish to extract your data from.
 
 **Note:** as the script is currently written, the file you enter as an argument will be rewritten with only the data you select in the script, so if you wish to preserve the original data, make a copy or change the source code of the script itself.
+
+
+### **fileCombiner.py**
+
+#### **Description**
+This script is made to combine multiple text files into a singular text file. In our case, it was used to create the all_first_names.txt and all_last_names.txt source files. 
+
+#### **Usage**
+To use the script, enter the following into terminal:
+```
+$ python fileCombiner.py
+```
+**Note:**the filepath will need to be edited to specifically fit the directory path one is 
+working with in order for the script to have its intended effect. Therefore, edit the path 
+to fit the directory path before running the script. 
