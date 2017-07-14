@@ -6,7 +6,7 @@ Hamming distance is a calculation of how many differences there are between two 
 
 ### **Positional Encoding Algorithms**
 I. **Bounded Mismatch Count Automaton (BMCA)**
--This automaton is designed for a sequence of continuous characters and will calculate a Hamming distance, d, for a given input
+- This automaton is designed for a sequence of continuous characters and will calculate a Hamming distance, d, for a given input
 
 - In the Bounded Mismatch Count Automaton, the number of columns is equal to the number of characters in the input stream
 
