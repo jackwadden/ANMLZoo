@@ -1,7 +1,7 @@
 # **Hamming**
 
 ## **Description**
-Hamming distance is a calculation of how many differences there are between two strings of the same length. Each character difference adds 1 to the total Hamming distance. For instance, if the strings “Hello” and “Helpp” are being considered, the Hamming distance would be 2. On the Automata Processor, a positional encoding algorithm is used to calculate Hamming distance. Though the Automata Processor does not inherently support arithmetic operations, various positional encodings can be employed in order to represent the outcome of such operations[1]. The two sectionw within the subheader below explain a number of positional encoding algorithms as they are used in the Hamming distance application. 
+Hamming distance is a calculation of how many differences there are between two strings of the same length. Each character difference adds 1 to the total Hamming distance. For instance, if the strings “Hello” and “Helpp” are being considered, the Hamming distance would be 2. On the Automata Processor, a positional encoding algorithm is used to calculate Hamming distance. Though the Automata Processor does not inherently support arithmetic operations, various positional encodings can be employed in order to represent the outcome of such operations[1]. The two section within the subheader below explain a number of positional encoding algorithms as they are used in the Hamming distance application. 
 
 
 ### **Positional Encoding Algorithms**
@@ -36,7 +36,7 @@ II. **Bounded Mismatch Idenfitication Automaton (BMIA)**
 
 ![](images/hamming2.png?raw=true)
 
-- An example of a bounded mismatch identification automaton for length L = 8 and de = 3 is shown above.
+- An example of a bounded mismatch identification automaton for length L = 8 and d = 3 is shown above.
 
 
 ## **Hamming Distance Uses**
