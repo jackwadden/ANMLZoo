@@ -27,7 +27,7 @@ The above command will generate an input file of 1000 nodes, each with a length 
 ### Input file name
 After the script concludes, an input file will be generated with a customized name based on the command-line arguments provided.
 
-
+---
 
 ## **dnaGen.sh**
 dnaGen.sh randomly generates a number of randomized DNA characters, which are by default outputted to standard out but can be piped to a text file if desired.
@@ -45,7 +45,7 @@ $ ./dnaGen.sh 10 > output.txt
 ```
 The above line saves the output to a file named output.txt.
 
-
+---
 
 ## **inputGen.sh**
 inputGen.sh randomly generates a number of randomized DNA characters, which are by default outputted to standard out but can be piped to a text file if desired.
@@ -62,7 +62,7 @@ $ ./dnaGen.sh 8 > output.txt
 ```
 The above line saves the output to a file named output.txt.
 
-
+---
 
 ## **Other inputs**
 If you do not need customized inputs, the "inputs" folder contains a number of standardized input files.
