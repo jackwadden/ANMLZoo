@@ -103,6 +103,8 @@ You will get four Levenshtein automata of various sizes, one for each line of te
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/file%20input%20test%20edit.png" width="605" height="180" alt="file_example">  
 </p>
 
+You can see these Levenshtein automata in the ANML Viewer below (**Figure 2**).
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/Levenshtein/images/pattern_Lev_ANML.png" width="833" height="391" alt="viewer_FILE_pattern_d2">  
 </p>
