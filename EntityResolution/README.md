@@ -41,12 +41,9 @@ this automaton has the ability to recognize pieces of data with a Hamming distan
  or 1. In our implementation, the Hamming distance recognition properties of each autom\
 aton can be arbitrarily edited in order to recognize different Hamming distances.
 
+---
+
 ## **Automata**
-
-Automata are constructed using full names. Each name is broken up into constituent part\
-s and emitted as an approximate name matching widget as described above.
-
-### **Standard Automata**
 The ER standard automata was constructed by running the nametoanml.py script on the 100\
 0.names input file. This script takes each name and converts it to a widget described a\
 bove to recognize all other entries in a database within Hamming distance 1.

@@ -39,15 +39,16 @@ II. **Bounded Mismatch Idenfitication Automaton (BMIA)**
 - An example of a bounded mismatch identification automaton for length L = 8 and d = 3 is shown above.
 
 
-## **Hamming Distance Uses**
+### **Hamming Distance Uses**
 Hamming distance is currently very applicable in bioinformatics, machine learning, and data mining, among other topics.
 
-## ANML
+---
+
+## Automata
 ### 93_20X3.1chip.anml
-93 Hamming distance widgets. Each widget calculates all strings within Hamming distance 3 of a randomly embedded string of length 20. This automata was tuned so that it uses the resources of an entire AP chip.
+93 Hamming distance widgets. Each widget calculates all strings within Hamming distance 3 of a randomly generated embedded string of length 20. This automata was tuned so that it uses the resources of an entire AP chip.
 
 ## Inputs
-Both included input files employ the full resources of the AP chip by using what we refer to, in the context of the ANML Zoo suite, as the standard candle. This is done in order to create a process by which to judge the AP architecture’s response to a given standardized input set. The standard candle setup allows for easier comparisons with different architectures and increased effectiveness in determining performance and evaluation of different tasks, while maintaining a certain standard of comparability.
 
 ### hamming_1MB.input
 1MB of randomly generated alphanumeric characters.
