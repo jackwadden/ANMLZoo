@@ -18,8 +18,9 @@ If a Levenshtein string pattern is **s**="**wahoo**" and Levenshtein edit distan
 
 <p align="center">
 <i><b>Figure 1</b> - Levenshtein automaton with string pattern s="wahoo" and edit distance of d=2.[1]  
-The first number in each state's name is the column number, from zero to the number of characters; for "wahoo" this would be 0-5. The second number is number of edits, from 0 to the edit distance; for d=2 it would be 0-2.  
-<br>(Starting/always active state is green and reporting states have purple outlines.)</i>
+</br>The first number in each state's name is the column number, from zero to the number of characters; ,0-5 
+</br>in this case. The second number is number of edits, from 0 to the edit distance; for d=2 it would be 0-2.  
+</br>(Starting/always active state is green and reporting states have purple outlines.)</i>
 </p>
 
 Starting at the first state, (**0.0**) we feed in the first character of an input string. If the first character is "**w**" this would move the state to the right, to (**1.0**), indicating one character match step and zero edits. If it was a blank space this would move to the state right above, to (**0.1**), indicating it zero successful character steps and one deletion edit. If it was any other character it would move above and to the right, to (**1.1**), indicating one character step with one insertion or substitution edit. It would then continue on to examine the second character at the active state, either (**1.0**), (**0.1**), or (**1.1**), and move to the next state depending on if it gets a match(right), deletion(up), or insert/substitution(up and right). 
