@@ -16,7 +16,7 @@ The leven program is dependant on <a href="https://github.com/jackwadden/VASim">
 
 ### **Examples and Images**
 
-#### **Levenshtein Example**
+#### **Standard Levenshtein Example**
 
 If a Levenshtein string pattern is *p*="*wahoo*" and Levenshtein edit distance is *d*=*2* then the resulting Levenshtein automaton would look like **Figure 1** below. The first number in each state is the column, from zero to the width of the pattern string - 0-5 in this case. The second number is the row, from 0 to the edit distance - 0-2 here.
 
@@ -36,7 +36,7 @@ Next it would continue on to examine the second character at the new active stat
 If it reaches any of the states to the far right (any 5.X states) this indicates the input string (p) matches the given pattern string within the given edit distance (d). However, if it reaches the top level of the automaton (any of the X.2 states) and encounters a futher edit this will terminate it's movement through the Levenshtein automata, thus preventing a positive match.
 
 
-#### **Automata Processor Levenshtein**
+#### **Automata Processor Levenshtein Example**
 
 STE's only output a logical yes/no match for the character they are looking for. This means that every transition will turn on the attached child STE if it returns a match for the input character. In order to make an Levenshtein automaton extra STE's must be used to recreate the same behavior as the above state Levenshtein automaton(**Figure 1**). These extra STE's will match on any input, and are indicated with the ( **\*** ) chacter. Connecting them as shown below (**Figure 2**) allow us to construct a Levenstein automaton using STE's.
 <p align="center">
