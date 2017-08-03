@@ -12,7 +12,7 @@ The **leven** program will accept a string or file of strings as input patterns 
 
 (*See  <a href="https://jeffudall.github.io/Levenshtein/Code/">README</a> file in the Code folder for more information on input syntax and program behavior.*)
 
-The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling main.cpp (or edit the make file). 
+The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim, place it in one folder up, and compile it before compiling the **leven** main.cpp (or edit the Make file) C++ code file. 
 
 ### **Examples and Images**
 
