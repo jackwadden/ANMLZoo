@@ -139,9 +139,7 @@ After the program concludes, an ANML file will be generated named "*leven*.anml"
 
 These input file generators were created for use with the <a href="https://github.com/jackwadden/ANMLZoo/tree/master/Hamming">Hamming distance</a> automata but input can be used for Levenshtein automata as well.
 
-## DNA Input
-
-## **dnaGen.sh**
+## DNA Input - dnaGen.sh
 dnaGen.sh randomly generates a number of randomized DNA characters, which are by default outputted to standard out but can be piped to a text file if desired.
 
 ### Default Example Use 
@@ -159,9 +157,7 @@ The above line saves the output to a file named output.txt.
 
 ---
 
-## Alpha-numeric Input
-
-## **inputGen.sh**
+## Alpha-numeric Input - inputGen.sh
 inputGen.sh randomly generates a number of randomized alphanumeric characters, which are by default outputted to standard out but can be piped to a text file if desired.
 
 ### Default Example Use 
