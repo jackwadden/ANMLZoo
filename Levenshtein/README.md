@@ -1,10 +1,8 @@
-# **Levenshtein**
+# Levenshtein
 
-## **Description**
+## Description
 
 A Levenshtein automoton contains a pattern string, *p*, and a Levenshtein edit distance, *d*. Any input string that matches pattern string within the edit distance will report a match. A pattern string is used to populate the Levenshtein automaton states with characters. The edit distance is the number of edits (*insert*, *substitute*, or *delete*) allowed in any matching string. 
-
-Levenshtein automata are used to find closely matching strings. For example a spell checker could use a Levenshtein automata to look for cloesly matching words for a misspelled word not in its dictionary.
 
 In order to make a Levenshtein automaton for Micron's Automata Processor (AP) we must convert the state machine to an automaton using state transition elements (STE's), which are the single automaton resource units of the AP.
 
@@ -14,9 +12,9 @@ The **leven** program will accept a string or file of strings as input patterns 
 
 The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim, place it in one folder up, and compile it before compiling the **leven** main.cpp (or edit the Make file) C++ code file. 
 
-### **Examples and Images**
+### Examples and Images
 
-#### **Standard Levenshtein Example**
+#### Standard Levenshtein Example
 
 If a Levenshtein string pattern is *p*="*wahoo*" and Levenshtein edit distance is *d*=*2* then the resulting Levenshtein automaton would look like **Figure 1** below. The first number in each state is the column, from zero to the width of the pattern string - 0-5 in this case. The second number is the row, from 0 to the edit distance - 0-2 here.
 
@@ -36,7 +34,7 @@ Next it would continue on to examine the second character at the new active stat
 If it reaches any of the states to the far right (any 5.X states) this indicates the input string (p) matches the given pattern string within the given edit distance (d). However, if it reaches the top level of the automaton (any of the X.2 states) and encounters a futher edit this will terminate it's movement through the Levenshtein automata, thus preventing a positive match.
 
 
-#### **Automata Processor Levenshtein Example**
+#### Automata Processor Levenshtein Example
 
 STE's only output a logical yes/no match for the character they are looking for. This means that every transition will turn on the attached child STE if it returns a match for the input character. In order to make an Levenshtein automaton extra STE's must be used to recreate the same behavior as the above state Levenshtein automaton(**Figure 1**). These extra STE's will match on any input, and are indicated with the ( **\*** ) chacter. Connecting them as shown below (**Figure 2**) allow us to construct a Levenstein automaton using STE's.
 <p align="center">
@@ -48,19 +46,9 @@ STE's only output a logical yes/no match for the character they are looking for.
 <br>(Starting/always active STE's are green and reporting STE's are purple.)</i>
 </p>
 
+#### Leven Executable Levenshtein Example
 
-## **Automata**
-
-Automata are constructed using pattern strings. Each pattern string is broken up into constituent characters and emitted as a Levenshtein automaton with a given Levenshtein edit distance.
-
-### **Standard Automata**
-The Levenshtein standard automata `leven_micron10_20x3.anml` was constructed by running the **leven** executable with the `DNA_width20_x10.txt` pattern string file and edit distance *d*=*3*. This takes all ten of the twenty character wide DNA pattern strings and converts them to ten Levenshtein automata. The resulting automata can recognize each of the twenty pattern strings in a given string of DNA nucleotides, within Levenshtein edit distance of *d*=*3*.
-
-## **Inputs**
-Input streams to Levenshtein automata consist of character strings of undetermined length. The Levenshtein automaton will report any matches within the given edit distance in the character string.
-
-### **Standard Inputs**
-The `DNA_20x10.input` input file was constructed using the strings contained in the `DNA_width20_x10.txt` input file. Each pattern string is separated by three characters, "` | `", to help read the edit distance results easier when viewing in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia. 
+The above Levenshtein automata can be easily created using the **leven** executable program. The pattern string *wahoo* and edit distance *d*=*2* are typed into the command line like this: `leven s wahoo 2`. This will result in a ANML file for use in the AP. It can also be viewed using Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia (**Figure 3**). 
 
 <p align="center">
 <img src="https://github.com/jeffudall/ANMLZooCopy/blob/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="state_wahoo_d2">  
@@ -70,6 +58,30 @@ The `DNA_20x10.input` input file was constructed using the strings contained in 
 <i><b>Figure 3</b> - Levenshtein automaton with string pattern p="wahoo" and edit distance of d=2 in ANML Viewer.    
 </br>(Matching are green, active children are yellow, reporting are orange, and active reporting are purple)</i>
 </p>
+
+### Levenshtein Automata Uses
+
+Levenshtein automata are used to find closely matching strings. For example a spell checker could use a Levenshtein automata to look for cloesly matching words for a misspelled word not in its dictionary.
+
+---
+
+## Automata Files
+Automata are constructed using pattern strings. Each pattern string is broken up into constituent characters and emitted as a Levenshtein automaton with a given Levenshtein edit distance. The **anml** folder contains the following standarized Levenshtein file:
+
+### 24_20x3.1chip.anml
+24 Levenshtein automata iterations. Each automata calculates all strings within Levenshtein edit distance *d*=*3* of a randomly generated pattern string of *width* = *20*. This automata was tuned so that it uses the resources of an entire AP chip.
+
+## Inputs
+
+Input streams to Levenshtein automata consist of character strings of undetermined length. The Levenshtein automaton will report any matches within the given edit distance in the character string.
+
+Because the encoded strings for the benchmark are generated randomly, the standard input sequences are generated randomly. However, inputs should be tailored to match the underlying use-case (e.g. appropriately distributed DNA base pairs for bio-informatics).
+
+### DNA_1MB.input
+1MB of randomly generated DNA nucleotide base characters.
+
+### DNA_10MB.input
+10MB of randomly generated DNA nucleotide base characters.
 
 
 ## References
