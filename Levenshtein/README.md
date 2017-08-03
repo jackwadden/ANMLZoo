@@ -62,6 +62,15 @@ Input streams to Levenshtein automata consist of character strings of undetermin
 ### **Standard Inputs**
 The `DNA_20x10.input` input file was constructed using the strings contained in the `DNA_width20_x10.txt` input file. Each pattern string is separated by three characters, "` | `", to help read the edit distance results easier when viewing in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia. 
 
+<p align="center">
+<img src="https://github.com/jeffudall/ANMLZooCopy/blob/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="state_wahoo_d2">  
+</p>
+
+<p align="center">
+<i><b>Figure 3</b> - Levenshtein automaton with string pattern p="wahoo" and edit distance of d=2 in ANML Viewer.    
+</br>(Matching are green, active children are yellow, reporting are orange, and active reporting are purple)</i>
+</p>
+
 
 ## References
 
