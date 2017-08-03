@@ -38,6 +38,7 @@ This parameter specifies which random type to use - either '`DNA`' or '`alphanum
 ### \<random iterations>
 This parameter specifies how many iterations of Levenshtein automata the resulting ANML file will contain. **Only applies to Random mode**
 
+---
 
 ## Examples and Detailed MODE Usage
 
@@ -45,11 +46,15 @@ The program has three modes - **String**, **File**, and **Random**.
 
 ### **String mode**  
 This mode allows you directly enter a pattern string to be made into a Levenshtein automaton with a given edit distance.  
-The arguments are in this format:  
-`leven s <pattern string> <edit dist>` 
+The arguments are in this format:
+```
+leven s <pattern string> <edit dist> 
+```
 
-Example:  
->`leven s wahoo 2`
+Example:
+```
+leven s wahoo 2
+```
 
 >This will make a Levenshtein automaton with *p="wahoo"* with an edit distance of *d=2*.  
 >This uses 5 STEs, one for each character, like this:    
@@ -73,56 +78,66 @@ The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a hre
 ### **File mode**  
 This mode allows you to import a file with multiple pattern strings to be made into Levenshtein automata.  
 **Note:** The new line character serves as a delimiter separating each pattern string/Levenshtein automata interation. Also  **emply lines are allowed** in text file.  
-The arguments for **File mode** are in this format:  
-`leven f <pattern file name> <edit dist>`  
+The arguments for **File mode** are in this format:
+```
+leven f <pattern file name> <edit dist>  
+```
 
 **Example**:  
->`leven f pattern.txt 2`  
+```
+leven f pattern.txt 2 
+```
 
->This will make a Levenshtein automaton for each line of chars in file, each with edit distance d=3.  
+This will make a Levenshtein automaton for each line of chars in file, each with edit distance d=3.  
 >If your `pattern.txt` file is:  
 >>Bob  
 >>Jones  
 >>Karen  
 >>Mary
 
->You will get four Levenshtein automata of various sizes, one for each line of text, like this:  
->>**(B)(o)(b)  
->>(J)(o)(n)(e)(s)  
->>(K)(a)(r)(e)(n)  
->>(M)(a)(r)(y)**
+You will get four Levenshtein automata of various sizes, one for each line of text, like this:  
+>**(B)(o)(b)  
+>(J)(o)(n)(e)(s)  
+>(K)(a)(r)(e)(n)  
+>(M)(a)(r)(y)**
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/file%20input%20test%20edit.png" width="605" height="180" alt="file_example">  
 </p>
 
 ### **Random mode**  
-The arguments for random mode are in this format:  
-`leven r <width> <edit dist> <DNA or alphanum> <iterations>`  
+The arguments for random mode are in this format:
+```
+leven r <width> <edit dist> <DNA or alphanum> <iterations>
+```
 
 **DNA Example**:  
->`leven r 5 2 DNA 5` 
+```
+leven r 5 2 DNA 5 
+```
 
->This will make five random Levenshtein automata, each five DNA chars long, with a edit distance of d=2 like this:  
->>**(G)(G)(A)(G)(A)   
->>(T)(C)(A)(G)(G)  
->>(C)(G)(A)(A)(C)  
->>(A)(G)(A)(A)(C)  
->>(G)(G)(C)(G)(G)**
+This will make five random Levenshtein automata, each five DNA chars long, with a edit distance of d=2 like this:  
+>**(G)(G)(A)(G)(A)   
+>(T)(C)(A)(G)(G)  
+>(C)(G)(A)(A)(C)  
+>(A)(G)(A)(A)(C)  
+>(G)(G)(C)(G)(G)**
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/rand%20DNA%20test%20edit.png" width="605" height="170" alt="rand_dna">  
 </p>
 
 **Alpha-num Example**:
->`leven r 5 2 alphanum 5` 
+```
+leven r 5 2 alphanum 5 
+```
 
->This will make five random Levenshtein automata, each five alpha-numeric chars long, with a edit distance of d=2  
->>**(5)(j)(p)(t)(N)  
->>(l)(b)(W)(e)(r)  
->>(9)(n)(V)(w)(5)  
->>(4)(d)(B)(q)(q)  
->>(0)(j)(g)(t)(e)**
+This will make five random Levenshtein automata, each five alpha-numeric chars long, with a edit distance of d=2  
+>**(5)(j)(p)(t)(N)  
+>(l)(b)(W)(e)(r)  
+>(9)(n)(V)(w)(5)  
+>(4)(d)(B)(q)(q)  
+>(0)(j)(g)(t)(e)**
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/rand%20alphanum%20test%20edit.png" width="605" height="175" alt="rand_alphanum">  
