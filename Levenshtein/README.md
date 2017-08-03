@@ -54,7 +54,7 @@ STE's only output a logical yes/no match for the character they are looking for.
 Automata are constructed using pattern strings. Each pattern string is broken up into constituent characters and emitted as a Levenshtein automaton with a given Levenshtein edit distance.
 
 ### **Standard Automata**
-The Levenshtein standard automata was constructed by running the leven executable on the `DNA_width20_x10.txt` input file. This takes each twenty character wide DNA patter strings on ten lines and converts it to ten Levenshtein automata which can recognize each of the twenty pattern strings in a given string of DNA nucleotides within Levenshtein edit distance *d*=*3*.
+The Levenshtein standard automata `leven_micron10_20x3.anml` was constructed by running the **leven** executable with the `DNA_width20_x10.txt` pattern string file and edit distance *d*=*3*. This takes all ten of the twenty character wide DNA pattern strings and converts them to ten Levenshtein automata. The resulting automata can recognize each of the twenty pattern strings in a given string of DNA nucleotides, within Levenshtein edit distance of *d*=*3*.
 
 ## **Inputs**
 Input streams to Levenshtein automata consist of character strings of undetermined length. The Levenshtein automaton will report any matches within the given edit distance in the character string.
