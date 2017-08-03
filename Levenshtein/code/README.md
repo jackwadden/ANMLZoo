@@ -60,12 +60,14 @@ Example:
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/string%20wahoo%20d2%20test%20edit.png" width="605" height="130" alt="string_example_wahoo_d2">  
 </p>
 
-The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia:
+The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia (**Figure 1**).
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/viewer_wahoo_d2.png" width="966" height="422" alt="ANML_viewer_wahoo_d2">  
+<img src="https://github.com/jeffudall/ANMLZooCopy/blob/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="state_wahoo_d2">  
 </p>
-In the image above the green STE's are showing a match with the yellow "`w`" chacter in the input string. (They are three (`*`) STE's and one (`w`) STE). The yellow STE's are the children STE's activated that will examine the next character, "`a`". The orange STE's are the reporting STE's that are activated when reaching the pink characters, "`h`", "`o`", "`o`", "` `", "`W`", ect that are two, or less, edits away from "`wahoo`".
+<p align="center">
+<i>Figure 1 - In the image above the green STE's are showing a match with the yellow "`w`" chacter in the input string. (They are three (`*`) STE's and one (`w`) STE). The yellow STE's are the children STE's activated that will examine the next character, "`a`". The orange STE's are the reporting STE's that are activated when reaching the pink characters, "`h`", "`o`", "`o`", "` `", "`W`", ect that are two, or less, edits away from "`wahoo`".
+</i></p>
 
 
 ### **File mode**  
