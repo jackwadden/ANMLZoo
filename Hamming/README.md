@@ -1,10 +1,10 @@
-# **Hamming**
+# Hamming
 
-## **Description**
+## Description
 Hamming distance is a calculation of how many differences there are between two strings of the same length. Each character difference adds 1 to the total Hamming distance. For instance, if the strings “Hello” and “Helpp” are being considered, the Hamming distance would be 2. On the Automata Processor, a positional encoding algorithm is used to calculate Hamming distance. Though the Automata Processor does not inherently support arithmetic operations, various positional encodings can be employed in order to represent the outcome of such operations[1]. The two section within the subheader below explain a number of positional encoding algorithms as they are used in the Hamming distance application. 
 
 
-### **Positional Encoding Algorithms**
+### Positional Encoding Algorithms
 I. **Bounded Mismatch Count Automaton (BMCA)**
 - This automaton is designed for a sequence of continuous characters and will calculate a Hamming distance, d, for a given input
 
@@ -39,15 +39,18 @@ II. **Bounded Mismatch Idenfitication Automaton (BMIA)**
 - An example of a bounded mismatch identification automaton for length L = 8 and d = 3 is shown above.
 
 
-## **Hamming Distance Uses**
-Hamming distance is currently very applicable in bioinformatics, machine learning, and data mining, among other topics.
+### Hamming Distance Uses
+Hamming distance is used as a kernel in a wide variety of applications including bioinformatics, machine learning, and data mining, among other topics.
 
-## ANML
+---
+
+## Automata
 ### 93_20X3.1chip.anml
-93 Hamming distance widgets. Each widget calculates all strings within Hamming distance 3 of a randomly embedded string of length 20. This automata was tuned so that it uses the resources of an entire AP chip.
+93 Hamming distance widgets. Each widget calculates all strings within Hamming distance 3 of a randomly generated embedded string of length 20. This automata was tuned so that it uses the resources of an entire AP chip.
 
 ## Inputs
-Both included input files employ the full resources of the AP chip by using what we refer to, in the context of the ANML Zoo suite, as the standard candle. This is done in order to create a process by which to judge the AP architecture’s response to a given standardized input set. The standard candle setup allows for easier comparisons with different architectures and increased effectiveness in determining performance and evaluation of different tasks, while maintaining a certain standard of comparability.
+
+Because the encoded strings for the benchmark are generated randomly, the standard input sequences are generated randomly. However, inputs should be tailored to match the underlying use-case (e.g. appropriately distributed DNA base pairs for bio-informatics).
 
 ### hamming_1MB.input
 1MB of randomly generated alphanumeric characters.
@@ -57,5 +60,3 @@ Both included input files employ the full resources of the AP chip by using what
 
 ## References
 [1] Roy, Indranil, and Srinivas Aluru. "Finding motifs in biological sequences using the micron automata processor." Parallel and Distributed Processing Symposium, 2014 IEEE 28th International. IEEE, 2014.
-
-
