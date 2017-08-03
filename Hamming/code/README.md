@@ -48,13 +48,13 @@ The above line saves the output to a file named output.txt.
 ---
 
 ## **inputGen.sh**
-inputGen.sh randomly generates a number of randomized DNA characters, which are by default outputted to standard out but can be piped to a text file if desired.
+inputGen.sh randomly generates a number of randomized alpha-numeric characters, which are by default outputted to standard out but can be piped to a text file if desired.
 
 ### Default Example Use 
  ```
  $ ./inputGen.sh 8
 ```
-The above line generates 8 random alphanumeric characters to the console.
+The above line generates 8 random alpha-numeric characters to the console.
 
 ### Piping Output Example Use
 ```
