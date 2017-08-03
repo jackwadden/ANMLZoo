@@ -60,7 +60,7 @@ The Levenshtein standard automata was constructed by running the leven executabl
 Input streams to Levenshtein automata consist of character strings of undetermined length. The Levenshtein automaton will report any matches within the given edit distance in the character string.
 
 ### **Standard Inputs**
-The `DNA_20x10.input` input file was constructed using the strings contained in the `DNA_width20_x10.txt` input file. Each pattern string is separated by three characters "` | `" to help read the edit distance results easier when viewing in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia. 
+The `DNA_20x10.input` input file was constructed using the strings contained in the `DNA_width20_x10.txt` input file. Each pattern string is separated by three characters, "` | `", to help read the edit distance results easier when viewing in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia. 
 
 
 ## References
