@@ -1,4 +1,6 @@
-# Leven - Levenshtein Automaton ANML Creation Program
+# Inputs
+
+## Leven - Levenshtein Automaton ANML Creation Program
 
 The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that can generate Levenshtein automata giving a pattern string, *p*, and Levenshtein edit distance, *d*.
 
@@ -7,7 +9,7 @@ The leven program is dependant on <a href="https://github.com/jackwadden/VASim">
 The *leven* executable creates a customized ANML file, named *leven.anml*, containing Levenshtein automata based on the command-line parameters in this format:  
 `leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations>`
 
-## Parameter Descriptions
+## Usage Parameter Descriptions
 
 ### \<MODE>
 This parameter specifies what mode you would like to use, '`s`' for **String**, '`f`' for **File**, or '`r`' for **Random**.  
@@ -22,7 +24,7 @@ This parameter specifies either the string characters in **String mode**, the fi
 ### \<edit dist>
 This parameter specifies the Levenshtein distance used when making the Levenshtein automata. The edit distance is the number of edits a matching string can have and still count as a match. An **_edit_** is either an *insertion*, *substitution*, or *deletion*. **NOTE:** *This number **MUST** be smaller than the pattern string width. (If the pattern string width is equal to or smaller than the edit distance the resulting Levenshtein automaton will match **EVERY** input string, thus making the automaton completely useless.)*
 
-**Example:** If the pattern string is "*wahoo*" and the edit distance is *d=2* then words such as "*wah*" "*wahooes* "*hoos*" "*wallhoo*" etc would all match because they are each only two edits away from "*wahoo*". Other strings like "*wa*" "*oohs*" "*ah*" "oops" will not report a match. Neither will any string report a match that doesn't contain at least three characters from "*wahoo*" in the same order. For instance "*oohaw*" will not report as a match, but "*hoo*" will.
+**Example:** If the pattern string is "`wahoo`" and the edit distance is *d=2* then input strings such as "*wah*" "*wahooes* "*hoos*" "*wallhoo*" etc would all report a match because they are each only two edits away from "`wahoo`". Other strings like "*wa*" "*oohs*" "*ah*" "oops" will not report a match. Neither will any string report a match that doesn't contain at least three characters from "*wahoo*" in the same order. For instance "*oohaw*" will not report as a match, but "*hoo*" will.
 
 ### \<random type>
 This parameter specifies which random type to use - either '`DNA`' or '`alphanum`'. **Only applies to Random mode**
@@ -37,7 +39,7 @@ This parameter specifies which random type to use - either '`DNA`' or '`alphanum
 This parameter specifies how many iterations of Levenshtein automata the resulting ANML file will contain. **Only applies to Random mode**
 
 
-## **Detailed MODE Usage**
+## Examples and Detailed MODE Usage
 
 The program has three modes - **String**, **File**, and **Random**. 
 
@@ -47,7 +49,7 @@ The arguments are in this format:
 `leven s <pattern string> <edit dist>` 
 
 Example:  
->**leven s wahoo 2**
+>`leven s wahoo 2`
 
 >This will make a Levenshtein automaton with *p="wahoo"* with an edit distance of *d=2*.  
 >This uses 5 STEs, one for each character, like this:    
@@ -73,7 +75,7 @@ The arguments for **File mode** are in this format:
 `leven f <pattern file name> <edit dist>`  
 
 **Example**:  
->**leven f pattern.txt 2**  
+>`leven f pattern.txt 2`  
 
 >This will make a Levenshtein automaton for each line of chars in file, each with edit distance d=3.  
 >If your `pattern.txt` file is:  
@@ -97,7 +99,7 @@ The arguments for random mode are in this format:
 `leven r <width> <edit dist> <DNA or alphanum> <iterations>`  
 
 **DNA Example**:  
->**leven r 5 2 DNA 5** 
+>`leven r 5 2 DNA 5` 
 
 >This will make five random Levenshtein automata, each five DNA chars long, with a edit distance of d=2 like this:  
 >>**(G)(G)(A)(G)(A)   
@@ -111,7 +113,7 @@ The arguments for random mode are in this format:
 </p>
 
 **Alpha-num Example**:
->**leven r 5 2 alphanum 5**  
+>`leven r 5 2 alphanum 5` 
 
 >This will make five random Levenshtein automata, each five alpha-numeric chars long, with a edit distance of d=2  
 >>**(5)(j)(p)(t)(N)  
@@ -123,3 +125,56 @@ The arguments for random mode are in this format:
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/rand%20alphanum%20test%20edit.png" width="605" height="175" alt="rand_alphanum">  
 </p>
+
+
+### Output ANML file name
+After the program concludes, an ANML file will be generated named "*leven*.anml" in the same folder as the **leven** executable is run from.
+
+---
+
+
+## Input File Generators
+
+These input file generators were created for use with the <a href="https://github.com/jackwadden/ANMLZoo/tree/master/Hamming">Hamming distance</a> automata but input can be used for Levenshtein automata as well.
+
+## DNA Input
+
+## **dnaGen.sh**
+dnaGen.sh randomly generates a number of randomized DNA characters, which are by default outputted to standard out but can be piped to a text file if desired.
+
+### Default Example Use 
+ ```
+ $ ./dnaGen.sh 10
+```
+The above line generates 10 random DNA characters to the console.
+    echo
+
+### Piping Output Example Use
+```
+$ ./dnaGen.sh 10 > output.txt
+```
+The above line saves the output to a file named output.txt.
+
+---
+
+## Alpha-numeric Input
+
+## **inputGen.sh**
+inputGen.sh randomly generates a number of randomized alphanumeric characters, which are by default outputted to standard out but can be piped to a text file if desired.
+
+### Default Example Use 
+ ```
+ $ ./inputGen.sh 8
+```
+The above line generates 8 random alphanumeric characters to the console.
+
+### Piping Output Example Use
+```
+$ ./dnaGen.sh 8 > output.txt
+```
+The above line saves the output to a file named output.txt.
+
+---
+
+## **Other inputs**
+If you do not need customized inputs, the "inputs" folder contains a number of standardized input files.
