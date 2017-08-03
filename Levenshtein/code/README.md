@@ -5,7 +5,7 @@ The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that c
 The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling main.cpp (or edit the make file). 
 
 The *leven* executable creates a customized ANML file, named *leven.anml*, containing Levenshtein automata based on the command-line parameters in this format:  
-`leven <MODE> <string/file name/rand width> <edit dist> <r DNA or alphanum> <r iterations>`
+`leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations>`
 
 ## Parameter Descriptions
 
@@ -24,7 +24,7 @@ This parameter specifies the Levenshtein distance used when making the Levenshte
 
 **Example:** If the pattern string is "*wahoo*" and the edit distance is *d=2* then words such as "*wah*" "*wahooes* "*hoos*" "*wallhoo*" etc would all match because they are each only two edits away from "*wahoo*". Other strings like "*wa*" "*oohs*" "*ah*" "oops" will not report a match. Neither will any string report a match that doesn't contain at least three characters from "*wahoo*" in the same order. For instance "*oohaw*" will not report as a match, but "*hoo*" will.
 
-### \<r DNA or alphanum>
+### \<random type>
 This parameter specifies which random type to use - either '`DNA`' or '`alphanum`'. **Only applies to Random mode**
 
 >#### DNA type
@@ -33,7 +33,7 @@ This parameter specifies which random type to use - either '`DNA`' or '`alphanum
 >#### alphanum type
 >This type will make random pattern string(s) using alpha-numeric characters consisting of 0-9 and A-Z (upper case and lower case) characters. 
 
-### \<r iterations>
+### \<random iterations>
 This parameter specifies how many iterations of Levenshtein automata the resulting ANML file will contain. **Only applies to Random mode**
 
 
