@@ -103,6 +103,14 @@ You will get four Levenshtein automata of various sizes, one for each line of te
 <img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/file%20input%20test%20edit.png" width="605" height="180" alt="file_example">  
 </p>
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/Levenshtein/images/pattern_Lev_ANML.png" width="833" height="391" alt="viewer_FILE_pattern_d2">  
+</p>
+<p align="center">
+<i>Figure 2 - In the image above the green STE's are showing a match with the yellow "`B`" chacter in the input string. The yellow STE's are the children STE's activated that will examine the next character, "`o`". 
+</br><b>Note:</b> The `Bob` Levenshtein automata is reporting (purple STE) at the first B because "B" is two edits away from `Bob`.
+</i></p>
+
 ### **Random mode**  
 The arguments for random mode are in this format:
 ```
