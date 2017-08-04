@@ -60,5 +60,3 @@ Because the encoded strings for the benchmark are generated randomly, the standa
 
 ## References
 [1] Roy, Indranil, and Srinivas Aluru. "Finding motifs in biological sequences using the micron automata processor." Parallel and Distributed Processing Symposium, 2014 IEEE 28th International. IEEE, 2014.
-
-
