@@ -54,7 +54,7 @@ inputGen.sh randomly generates a number of randomized alphanumeric characters, w
  ```
  $ ./inputGen.sh 8
 ```
-The above line generates 8 random alphanumeric characters to the console.
+The above line generates 8 random alpha-numeric characters to the console.
 
 ### Piping Output Example Use
 ```
