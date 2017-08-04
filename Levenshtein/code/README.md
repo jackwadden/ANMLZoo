@@ -60,13 +60,13 @@ leven s wahoo 2
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/string%20wahoo%20d2%20test%20edit.png" width="605" height="130" alt="string_example_wahoo_d2">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/string%20wahoo%20d2%20test%20edit.png" width="605" height="130" alt="string_example_wahoo_d2">  
 </p>
 
 The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia (**Figure 1**).
 
 <p align="center">
-<img src="https://github.com/jeffudall/ANMLZooCopy/blob/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="state_wahoo_d2">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="ANMLviewer_wahoo_d2">  
 </p>
 <p align="center">
 <i>Figure 1 - In the image above the green STE's are showing a match with the yellow "`w`" chacter in the input string. (They are three (`*`) STE's and one (`w`) STE). The yellow STE's are the children STE's activated that will examine the next character, "`a`". The orange STE's are the reporting STE's that are activated when reaching the pink characters, "`h`", "`o`", "`o`", "` `", "`W`", ect that are two, or less, edits away from "`wahoo`".
@@ -100,13 +100,13 @@ You will get four Levenshtein automata of various sizes, one for each line of te
 >(M)(a)(r)(y)**
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/file%20input%20test%20edit.png" width="605" height="180" alt="file_example">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/file%20input%20test%20edit.png" width="605" height="180" alt="file_example">  
 </p>
 
 You can see these Levenshtein automata in the ANML Viewer below (**Figure 2**).
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/Levenshtein/images/pattern_Lev_ANML.png" width="833" height="391" alt="viewer_FILE_pattern_d2">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/pattern_Lev_ANML.png" width="833" height="391" alt="pattern_Lev_ANML">  
 </p>
 <p align="center">
 <i>Figure 2 - In the image above the green STE's are showing a match with the yellow "`B`" chacter in the input string. The yellow STE's are the children STE's activated that will examine the next character, "`o`". 
@@ -132,7 +132,7 @@ This will make five random Levenshtein automata, each five DNA chars long, with 
 >(G)(G)(C)(G)(G)**
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/rand%20DNA%20test%20edit.png" width="605" height="170" alt="rand_dna">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/rand%20DNA%20test%20edit.png" width="605" height="170" alt="rand_dna">  
 </p>
 
 **Alpha-num Example**:
@@ -148,7 +148,7 @@ This will make five random Levenshtein automata, each five alpha-numeric chars l
 >(0)(j)(g)(t)(e)**
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/Levenshtein/master/Images/rand%20alphanum%20test%20edit.png" width="605" height="175" alt="rand_alphanum">  
+<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/rand%20alphanum%20test%20edit.png" width="605" height="175" alt="rand_alphanum">  
 </p>
 
 
