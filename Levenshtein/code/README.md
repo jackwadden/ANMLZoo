@@ -153,7 +153,12 @@ This will make five random Levenshtein automata, each five alpha-numeric chars l
 
 
 ### Output ANML file name
-After the program concludes, an ANML file will be generated named "*leven*.anml" in the same folder as the **leven** executable is run from.
+After the program concludes, an ANML file will be generated in the same folder as the **leven** executable is run from. The name of the ANML file will begin with "*leven_*" and then will be based on the string/file name/random type and edit distance (in addition to the width and iterations for the random mode). 
+
+**Examples:**  
+`leven_wahoo_d2.anml`  
+`leven_test.txt_d2.anml`  
+`leven_DNA_w5_d3_x20.anml`  
 
 ---
 
