@@ -1,4 +1,4 @@
-# automatize - Random Foreset Automata Generator
+# automatize - RF Automata Generator
 
 The Random Forest automata generator, **automatize.py**, is an Object-Oriented style Python script which will generate an ANML file compatible with the Micron Automata Processor(AP).
 
@@ -62,7 +62,7 @@ MNIST, a canned dataset included in SciKit LEARN, is provided as an example.
 
 ### -m \<model type>
 This parameter specifies model type
-- **rf** = **Random Forest** <--Use this one
+- **rf** = **Random Forest** 
 - brt = Gradient Boosting
 - ada = Ada Boost
 
