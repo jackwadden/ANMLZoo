@@ -29,7 +29,7 @@ To use pip to install in BASH, type the following command:
 ```
 $ pip install <package name>
 ```  
-or to install without root access use the following command:
+To install without root access use the following command:
 ```
 $ pip install -- user <package name>
 ```    
