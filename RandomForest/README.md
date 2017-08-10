@@ -1,16 +1,36 @@
 # RandomForest
 ## Description
 
-This is an open-source implementation of Decision Tree-based (Random Forest, Boosted Regression Trees, Adaboost) machine learning models as Automata on Micron's Automata Processor (AP). This code trains a Decision Tree-based model with Scikit Learn (on the CPU), and transforms the resulting model into ANML, an XML-like representation of Nondeterministic Finite Automata (NFA) for the Automata Processor. 
+This is an open-source implementation of decision tree-based (Random Forest, Boosted Regression Trees, Adaboost) machine learning models as automata on Micron's Automata Processor (AP). This code trains a decision tree-based model with <a href="http://scikit-learn.org/stable/index.html#">scikit-learn</a> (on a CPU), and transforms the resulting model into the ANML format, an XML-like representation of nondeterministic finite automata (NFA) for the Automata Processor. 
 
-While the first, labeling, stage occurs on the FPGA on the AP card and the second, model execution, stage occures on the AP; currently the final voting stage of classification must be done on a CPU.
+## Random Forest Algorithm
 
-For more about the Automata Processor, visit CAP's website: http://cap.virginia.edu/
+Random Forest is an ensemble technique supervised classification algorithm. It is made of many binary decision trees, each trained by a random subset of sample data. 
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/classification_decision_tree.jpg" width="820" height="423" alt="Classification decision tree"> 
+</p>
+<p align="center">
+<b>Figure 1</b> - Decision tree with a single feature vector <b>[1]</b>
+</p>
+
+### Execution Pipeline
+
+First a feature vector values are turned into 8-bit label values and added to a lavel vector. Next the AP processes these vectors in parallel to identify tree classifications.
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/execution_pipeline.jpg" width="711" height="578" alt="Execution pipeline"> 
+</p>
+<p align="center">
+<b>Figure 2</b> - The  <b>[1]</b>
+</p>
+Currently the final voting stage, of combining the classifications from all trees, must be done on a CPU.
+
+For more about the Automata Processor, visit <a href="http://cap.virginia.edu/">CAP's website</a>. 
 
 This project is written in Python in the Object-Oriented style.
 
 ### Download
-Download the RF Automata code from author Tommy Tracy II's repository located <a href="https://github.com/tjt7a/rfautomata">here</a>. You can also clone it to your machine using the following command: 
+Download the RF Automata code, by author Tommy Tracy II, from the repository located <a href="https://github.com/tjt7a/rfautomata">here</a>. You can also clone it to your machine using the following command: 
 `git clone git@github.com:tjt7a/rfautomata.git`
 
 ## Dependancies
@@ -61,14 +81,13 @@ ImportError: No module named mnrl
 
 ## Data Input
 
-In order to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz). Please see the following examples found in <a href="https://github.com/tjt7a/rfautomata/tree/master/data">data</a> folder of RF Automata:
+In order to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz). Please see the following examples found in the <a href="https://github.com/tjt7a/rfautomata/tree/master/data">data</a> folder of RF Automata.
 
 ### ocrExtractor
 
 The ocrExtractor program extracts the pixel feature matrix (X) and classification vector (y) from normalized handwritten letter data based on Rob Kassel's OCR work. The data can be obtained from the following locations:  
 https://github.com/adiyoss/StructED/tree/master/tutorials-code/ocr/data  
 http://ai.stanford.edu/~btaskar/ocr/  
-
 -i: Input OCR data file derived from Rob Kassel's MIT work  
 -o: The output .npz filename that will contain X and y  
 -v: Verbosity flag  
@@ -96,4 +115,4 @@ A portion of 300f_15t_from_model_MNIST.anml properly pruned to max out the resou
 ### mnist_10MB.input
 
 # References
-Tracy II, T., Fu, Y., Roy, I., Jonas, E., & Glendenning, P. (2016, June). Towards Machine Learning on the Automata Processor. In International Conference on High Performance Computing (pp. 200-218). Springer International Publishing, 2016.
+**[1]** Tracy II, T., Fu, Y., Roy, I., Jonas, E., & Glendenning, P. (2016, June). Towards Machine Learning on the Automata Processor. In International Conference on High Performance Computing (pp. 200-218). Springer International Publishing, 2016.
