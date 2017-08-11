@@ -46,7 +46,7 @@ The lack of support in the AP for floating point input means that in order to su
 <b>Figure 4</b><i> - Floating-point feature vectors must be broken down into intervals in order to represent each chain of the decision tree.  The intervals represented by the feature vector from Figure 1 are highlighted.</i><b>[1]</b>
 </p>
 
-Finally in order to take full advantage of the space available in each STE of the AP we turn the chains into cycles with the members of the chains. As each chain is unique we can use repeating loops to check that each feature value of the chain is true before returning a match for the leaf node's class. If the tested value is not a member of the cycle it will no longer activate itself on the next value. If all values in the cycle return true it will report the class as true.
+These decision path chains can then be represented by STE's in the AP, however this is not an efficient use of the memory space available in each STE.
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/chains_as_automata.jpg" width="711" height="460" alt="Chains as automata">  
@@ -55,6 +55,7 @@ Finally in order to take full advantage of the space available in each STE of th
 <b>Figure 5</b><i> - Decision tree paths as chains using STEs in the AP. The chain that would report on finding the feature vector from Figure 1 is highlighted.</i><b>[1]</b>
 </p>
 
+Finally in order to take full advantage of the space available in each STE of the AP we turn the chains into cycles with the members of the chains. As each chain is unique we can use repeating loops to check that each feature value of the chain is true before returning a match for the leaf node's class. If the tested value is not a member of the cycle it will no longer activate itself on the next value. If all values in the cycle return true it will report the class as true.
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/combined_features.jpg" width="816" height="274" alt="Combined features automata">  
@@ -67,15 +68,16 @@ Finally in order to take full advantage of the space available in each STE of th
 
 ### Execution Pipeline
 
-First a feature vector values are turned into 8-bit label values and added to a label vector. Next the AP processes these vectors in parallel to identify tree classifications.
+The execution pipeline of the Random Forest algorithm has three steps. First a feature vector values are turned into 8-bit label values and added to a label vector. Next the AP processes these vectors in parallel to identify tree classifications. This is where the speed advantages of using the AP become apparent. 
+
+Currently the final voting stage of the Random Foreset algorithm, combining the classes from all trees, must be done on a CPU. This is a simple average of the reported classes.
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/execution_pipeline.jpg" width="711" height="578" alt="Execution pipeline"> 
 </p>
 <p align="center">
 <b>Figure 7</b><i> - The three stages of the execution pipeline -First, feature value ranges are calculated, then feature vectors are translated into lable vectors (based on the floating-point value intervals calculated by the FPGA on the AP card), and finally the AP uses the decision tree paths (translated into STE cycles) to process the data and return classifications.</i><b>[1]</b>
 </p>
-Currently the final voting stage of the Random Foreset algorithm, combining the classes from all trees, must be done on a CPU. This is a simple average of the reported classes.
-
 
 
 ### Download
