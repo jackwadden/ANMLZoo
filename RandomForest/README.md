@@ -20,10 +20,8 @@ A feature
 </p>
 
 
-
-
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/tree_w_values.jpg" width="614" height="194" alt="Tree with values">  
 </p>
 <p align="center">
 <b>Figure 2</b> - The  <b>[1]</b>
@@ -31,17 +29,25 @@ A feature
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
 </p>
 <p align="center">
 <b>Figure 3</b> - The  <b>[1]</b>
+</p>
+
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
+</p>
+<p align="center">
+<b>Figure 4</b> - The  <b>[1]</b>
 </p>
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/chains_as_automata.jpg" width="711" height="460" alt="Chains as automata">  
 </p>
 <p align="center">
-<b>Figure 4</b> - The  <b>[1]</b>
+<b>Figure 5</b> - The  <b>[1]</b>
 </p>
 
 
@@ -49,7 +55,7 @@ A feature
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/combined_features.jpg" width="816" height="274" alt="Combined features automata">  
 </p>
 <p align="center">
-<b>Figure 5</b> - The  <b>[1]</b>
+<b>Figure 6</b> - The  <b>[1]</b>
 </p>
 
 
@@ -61,7 +67,7 @@ First a feature vector values are turned into 8-bit label values and added to a 
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/execution_pipeline.jpg" width="711" height="578" alt="Execution pipeline"> 
 </p>
 <p align="center">
-<b>Figure 6</b> - The  <b>[1]</b>
+<b>Figure 7</b> - The  <b>[1]</b>
 </p>
 Currently the final voting stage, of combining the classifications from all trees, must be done on a CPU.
 
