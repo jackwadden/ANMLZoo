@@ -1,11 +1,16 @@
 # RandomForest
 ## Description
 
-This is an open-source implementation of decision tree-based (Random Forest, Boosted Regression Trees, Adaboost) machine learning models as automata on Micron's Automata Processor (AP). This code trains a decision tree-based model with <a href="http://scikit-learn.org/stable/index.html#">scikit-learn</a> (on a CPU), and transforms the resulting model into the ANML format, an XML-like representation of nondeterministic finite automata (NFA) for the Automata Processor. 
+This benchmark is an open-source implementation of decision tree-based (Random Forest, Boosted Regression Trees, Adaboost) machine learning models as automata on Micron's Automata Processor (AP) and is written in Python in the Object-Oriented style. This code trains a decision tree-based model with <a href="http://scikit-learn.org/stable/index.html#">scikit-learn</a> (on a CPU), and transforms the resulting model into the ANML format, an XML-like representation of nondeterministic finite automata (NFA) for the Automata Processor. 
+
+For more about the Automata Processor, visit <a href="http://cap.virginia.edu/">CAP's website</a>. 
+
 
 ## Random Forest Algorithm
 
-Random Forest is an ensemble technique supervised classification algorithm. It is made of many binary decision trees, each trained by a random subset of sample data. 
+Random Forest is an ensemble technique supervised classification algorithm. It is made of many binary decision trees, each trained by a random subset of sample data. We can 
+
+A feature
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/classification_decision_tree.jpg" width="820" height="423" alt="Classification decision tree"> 
@@ -14,6 +19,44 @@ Random Forest is an ensemble technique supervised classification algorithm. It i
 <b>Figure 1</b> - Decision tree with a single feature vector <b>[1]</b>
 </p>
 
+
+
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
+</p>
+<p align="center">
+<b>Figure 2</b> - The  <b>[1]</b>
+</p>
+
+
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
+</p>
+<p align="center">
+<b>Figure 3</b> - The  <b>[1]</b>
+</p>
+
+
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/chains_as_automata.jpg" width="711" height="460" alt="Chains as automata">  
+</p>
+<p align="center">
+<b>Figure 4</b> - The  <b>[1]</b>
+</p>
+
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/combined_features.jpg" width="816" height="274" alt="Combined features automata">  
+</p>
+<p align="center">
+<b>Figure 5</b> - The  <b>[1]</b>
+</p>
+
+
+
 ### Execution Pipeline
 
 First a feature vector values are turned into 8-bit label values and added to a lavel vector. Next the AP processes these vectors in parallel to identify tree classifications.
@@ -21,13 +64,11 @@ First a feature vector values are turned into 8-bit label values and added to a 
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/execution_pipeline.jpg" width="711" height="578" alt="Execution pipeline"> 
 </p>
 <p align="center">
-<b>Figure 2</b> - The  <b>[1]</b>
+<b>Figure 6</b> - The  <b>[1]</b>
 </p>
 Currently the final voting stage, of combining the classifications from all trees, must be done on a CPU.
 
-For more about the Automata Processor, visit <a href="http://cap.virginia.edu/">CAP's website</a>. 
 
-This project is written in Python in the Object-Oriented style.
 
 ### Download
 Download the RF Automata code, by author Tommy Tracy II, from the repository located <a href="https://github.com/tjt7a/rfautomata">here</a>. You can also clone it to your machine using the following command: 
