@@ -27,6 +27,7 @@ The final leaf node in a decion tree can be grouped into a class. Each path thro
 <b>Figure 2</b><i> - Same decision tree with values replaced by variables.</i><b>[1]</b>
 </p>
 
+## Random Forest on the Automata Processor
 
 In order to take advantage of the non-linear features of the AP we translate each possible path in the decision tree as a single chain of features. If the feature is not a part of the original tree we represent the node with a **(\*)** (take anything) node. 
 
@@ -78,11 +79,6 @@ Currently the final voting stage of the Random Foreset algorithm, combining the 
 <p align="center">
 <b>Figure 7</b><i> - The three stages of the execution pipeline -First, feature value ranges are calculated, then feature vectors are translated into lable vectors (based on the floating-point value intervals calculated by the FPGA on the AP card), and finally the AP uses the decision tree paths (translated into STE cycles) to process the data and return classifications.</i><b>[1]</b>
 </p>
-
-
-### Download
-Download the RF Automata code, by author Tommy Tracy II, from the repository located <a href="https://github.com/tjt7a/rfautomata">here</a>. You can also clone it to your machine using the following command: 
-`git clone git@github.com:tjt7a/rfautomata.git`
 
 ## Dependancies
 Make sure that you have the following dependencies installed. If missing, **use pip to install**. (If this doesn't work you will need to download and run python setup file or download the source code and add to PYTHONPATH.)
