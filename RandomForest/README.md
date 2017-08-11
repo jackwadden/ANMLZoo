@@ -23,22 +23,19 @@ A feature
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
 </p>
 <p align="center">
 <b>Figure 2</b> - The  <b>[1]</b>
 </p>
 
 
-
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
 </p>
 <p align="center">
 <b>Figure 3</b> - The  <b>[1]</b>
 </p>
-
-
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/chains_as_automata.jpg" width="711" height="460" alt="Chains as automata">  
