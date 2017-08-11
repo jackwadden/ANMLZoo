@@ -8,46 +8,51 @@ For more about the Automata Processor, visit <a href="http://cap.virginia.edu/">
 
 ## Random Forest Algorithm
 
-Random Forest is an ensemble technique supervised classification algorithm. It is made of many binary decision trees, each trained by a random subset of sample data. We can 
+Random Forest is an ensemble method supervised learning classification algorithm. It is made of many binary decision trees, each trained by a random subset of labled feature sample data. By taking random subset of feature data Random Forest can avoid overfitting the trees to the data and decrease model variance without increasing bias. 
 
-A feature
+The final leaf node in a decion tree can be grouped into a class. Each path through a decision tree corrisponds to one of the available classes. We can then match each feature vector to a specific path and class. 
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/classification_decision_tree.jpg" width="820" height="423" alt="Classification decision tree"> 
 </p>
 <p align="center">
-<b>Figure 1</b> - Decision tree with a single feature vector <b>[1]</b>
+<b>Figure 1</b> - Decision tree with a single feature vector. The feature vector provided corrisponds to the highlighted path from the root of the tree to the classified leaf node. <b>[1]</b>
 </p>
 
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/tree_w_values.jpg" width="614" height="194" alt="Tree with values">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/tree_with_variables.jpg" width="809" height="254" alt="Tree with variables">  
 </p>
 <p align="center">
-<b>Figure 2</b> - The  <b>[1]</b>
+<b>Figure 2</b> - Same decision tree with values replaced by variables.<b>[1]</b>
 </p>
 
+
+In order to take advantage of the non-linear features of the AP we translate each possible path in the decision tree as a single chain of features. If the feature is not a part of the original tree we represent the node with a **(\*)** (take anything) node. 
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/complete_chains_a.jpg" width="821" height="358" alt="Reordered and complete tree">  
 </p>
 <p align="center">
-<b>Figure 3</b> - The  <b>[1]</b>
+<b>Figure 3</b> - Decision tree paths represented as chains of feature values. The chain that matches the provided feature vector from Figure 1 is highlighted. <b>[1]</b>
 </p>
 
+The lack of support in the AP for floating point input means that in order to support features with floating point values in the 8-bit memory of an STE it is nessicary to divide the feature address space into interval thresholds which represent each feature of the feature vector space.
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/feature_addresses.jpg" width="819" height="243" alt="Feature addresses">  
 </p>
 <p align="center">
-<b>Figure 4</b> - The  <b>[1]</b>
+<b>Figure 4</b> - Floating-point feature vectors must be broken down into intervals in order to represent each chain of the decision tree.  The intervals represented by the feature vector from Figure 1 are highlighted.<b>[1]</b>
 </p>
+
+Finally in order to take full advantage of the space available in each STE of the AP we turn the chains into cycles with the members of the chains. As each chain is unique we can use repeating loops to check that each feature value of the chain is true before returning a match for the leaf node's class. If the tested value is not a member of the cycle it will no longer activate itself on the next value. If all values in the cycle return true it will report the class as true.
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/chains_as_automata.jpg" width="711" height="460" alt="Chains as automata">  
 </p>
 <p align="center">
-<b>Figure 5</b> - The  <b>[1]</b>
+<b>Figure 5</b> - Decision tree paths as chains using STEs in the AP. The chain that would report on finding the feature vector from Figure 1 is highlighted.<b>[1]</b>
 </p>
 
 
@@ -55,21 +60,21 @@ A feature
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/combined_features.jpg" width="816" height="274" alt="Combined features automata">  
 </p>
 <p align="center">
-<b>Figure 6</b> - The  <b>[1]</b>
+<b>Figure 6</b> - Decision tree paths represented as single cycles using STEs of the AP. The cycle that would report on finding the feature vector from Figure 1 is highlighted.<b>[1]</b>
 </p>
 
 
 
 ### Execution Pipeline
 
-First a feature vector values are turned into 8-bit label values and added to a lavel vector. Next the AP processes these vectors in parallel to identify tree classifications.
+First a feature vector values are turned into 8-bit label values and added to a label vector. Next the AP processes these vectors in parallel to identify tree classifications.
 <p align="center">
 <img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/execution_pipeline.jpg" width="711" height="578" alt="Execution pipeline"> 
 </p>
 <p align="center">
 <b>Figure 7</b> - The  <b>[1]</b>
 </p>
-Currently the final voting stage, of combining the classifications from all trees, must be done on a CPU.
+Currently the final voting stage of the Random Foreset algorithm, combining the classes from all trees, must be done on a CPU. This is a simple average of the reported classes.
 
 
 
