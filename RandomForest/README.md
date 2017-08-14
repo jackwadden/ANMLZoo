@@ -115,7 +115,7 @@ You also need to add the MNRL dependancy:
 #### Install by Adding to PYTHONPATH
 To add MNRL you must add the source code to *PYTHONPATH* in BASH with this command:
 ```
-$ export PYTHONPATH = [filepath]/mnrl/python
+$ export PYTHONPATH=[filepath]/mnrl/python
 ```
 To check if MNRL is installed properly open python and type 
 ```
