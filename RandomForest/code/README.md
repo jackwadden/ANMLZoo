@@ -20,15 +20,16 @@ This parameter specifies the name of the the Scikit Learn model use by **automat
 This parameter specifies name of the output ANML file (default: **model.anml**).
 
 ### [OPTIONS]
-These parameters specify the following options:
-- **--unrolled**: Don't compress the chains into loops; this generates one STE per feature per chains (default: false)
-- **--mnrl**: Generate MNRL chains with floating point inequalities (default: false)
-- **--short**: Make a short version of the input file to the AP (default: false)
-- **--longer**: Make a 1000x larger input file to the AP (default: false)
+You can also specifiy these optional parameters:
+- **`-v`**: Print verbose descriptions of each step in program's progress.
+- **`--short`**: Make a short version of the input file to the AP (default: false)
+- **`--longer`**: Make a 1000x larger input file to the AP (default: false)
+- **`--unrolled`**: Skip compressing the chains into loops. This generates one STE per feature per chains. (This will create a very big output file.)
+
 
 ## Example
 ```
-$ automatize.py -m model.pickle -a mymodel.anml --short
+$ automatize.py -m model.pickle -a mymodel.anml --short -v
 ```
 This will use a short version of the model.pickle file to make an ANML file named *mymodel.anml*.
 
@@ -62,15 +63,28 @@ MNIST, a canned dataset included in SciKit LEARN, is provided as an example.
 
 ### -m \<model type>
 This parameter specifies model type
-- **rf** = **Random Forest** 
-- brt = Gradient Boosting
-- ada = Ada Boost
+- **`rf`** = **Random Forest** 
+- `brt` = Gradient Boosting
+- `ada` = Ada Boost
 
 ### -d \<depth of decision trees>
 This parameter specifies the maximum depth of the decision tree learners. 
 
 ### -n \<number of trees in ensemble>
 This parameter specifies the number of decision trees in the ensemble. 
+
+### [OPTIONS]
+You can also specifiy these optional parameters:
+- **`-l <number of leaves>`**: Instead of depth you can specify number of leaves for decision trees.  
+- **`-n <number of jobs>`**: You can specify the number ofjobs to run in parallel for fit/predict  
+- **`-t <training npz file name>`**: Name of training data .npz file.   
+- **`-x <testing data npz file name>`**: Name of testing data .npz file.  
+- **`-v`**: Print verbose descriptions of each step in program's progress.  
+- **`--report`**: You can specify the name of the report (default is *"report.txt"*)  
+- **`--metric`**: Choose the success metric type  
+    - **`acc`**: Accuracy score (default)  
+    - ` f1`: F1 score   
+    - `mse`: Mean Squared Error   
 
 ## Example
 ```
@@ -82,7 +96,7 @@ This will make an Random Forest using the MNIST canned dataset with a maximum de
 The **trainEnsemble.py** script creates the follwing files:  
 **model.pickle**: a serialized Scikit Learn Random Forest model  
 **report.txt**: a file that contains the parameters used for training the model  
-**testing_data.pickle**: a serialized file containing the training data for testing the mod
+**testing_data.pickle**: a serialized file containing the training data for testing the model
 
 ---
 
@@ -92,33 +106,26 @@ If you do not need customized inputs, the "inputs" folder contains a number of s
 ---
 
 # Optional - Test the CPU throughput of the model
+In order to get an approximation of the performance of the same Random Forest on a standard CPU processor you can use the **test_cpu.py** script to calculate the average throughput of your model on your CPU. Simply run **test_cpu.py** in the same directory as your generated model files
 
-In order to get an approximation of the performance of the same Random Forest on a standard CPU processor you can use the **test_cpu.py** script to calculate the average throughput of your model on your CPU.
+## Usage Parameters
+All parameters are optional parameters:
+- **`-n \<test iterations>`**: Number of test iterations (defaults to 1000)
+- **`-j \<threads>`**: Number of threads used to run the model
+- **`-m \<model file>`**: The serialized model file name (defaults to *model.pickle*)
+- **`-t \<testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+- **`-v`**: Print verbose descriptions of each step in program's progress.
 
-Simply run **test_cpu.py** in the same directory as your generated model files
+## Example
+If you are using the default settings you can simply run it via this command:
 ```
 $ test_cpu.py
 ```
-You can also provide other options in this format:
+
+If using custom settings you can provide other options in this format:
 ```
 $ test_cpu.py -n <test iterations> -j <threads> -m <model file> -t <testing data>
 ```
 
-## Usage Parameters
-
-### -n \<test iterations>
-The number of test iterations (defaults to 1000)
-
-### -j \<threads>
-The number of threads to be used for running the model
-
-### -m \<model file>
-The serialized model file (defaults to **model.pickle**)
-
-### -t \<testing data>
-The testing data (defaults to **testing_data.pickle**)
-
-
 ## Output
-
 The resulting throughput is a measurment in kilo samples classified per wall-clock second.
