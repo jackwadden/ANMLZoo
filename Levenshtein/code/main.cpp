@@ -1,4 +1,6 @@
-//Written by Jeffrey Udall 
+//Author: Jeffrey Udall
+//Email: judall@pdx.edu
+//https://github.com/jeffudall/
 //2017 University of Virginia
 
 /*Levenshtein wiring algorithm based on:
@@ -292,6 +294,7 @@ int main(int argc, char * argv[]) {
 
 					convert_n = ostringstream(); // Clear temp stream string
 					STE_symbol = p[j-1]; // Get STE symbol from p string
+					STE_symbol = "["+STE_symbol+"]"; // Add brackets around character
 
 					if (j == i+1)  // Set starting and late start blocks
 						// Make new STE with name, symbol, and start values
@@ -300,6 +303,7 @@ int main(int argc, char * argv[]) {
 					else  // Set non-starting blocks
 						// Make new STE with name, symbol, and start values
 						index[w][i][j][1] = new STE(STE_name, STE_symbol, off);
+
 			}	}	
 
 			//Populate star STEs  - index [w][y][x][0]
