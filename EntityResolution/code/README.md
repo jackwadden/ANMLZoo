@@ -4,12 +4,12 @@
 #### **name_generator.py**
 name_generator asks for five initial values: the number of total names, the number of first names, the number of last names, a random seed from which to generate first and last name combinations, and a name delimiter symbol. Note that the order each parameter is mentioned in the prior sentence is the order that each parameter should be entered in the command line.
 
-name_generator.py outputs a text file of arbitrary size. A name file delimited by comma characters would look like the following:
+name_generator.py outputs a text file of arbitrary size. A name file delimited by ~ characters would look like the following:
 
 ```
-LastName1, FirstName1
-LastName2, FirstName2
-LastName3, FirstName3
+LastName1, FirstName1~
+LastName2, FirstName2~
+LastName3, FirstName3~
 etc. …
 ```
 
