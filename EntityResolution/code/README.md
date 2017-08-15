@@ -48,22 +48,22 @@ name_generator.py allows you to create random automata files of the proper forma
 Random_error_gen.py takes 9 command line arguments: <total_names_num>, <first_names_num>, <last_names_num>, <output_file_name>, <random_seed>, <hamming_or_random_caps>, <delimiter>, <line_error_frequency>, <letter_error_frequency>, in the order described.
 
 #### **Description**
-This script generates name files, and then uses those name files to output new files, which contain errors. Currently, two error types are supported: capitalization errors and hamming distance errors. The <line_error_frequency> parameter is used to determine what percentage of the script’s output file should have errors. If a ‘1’ is entered for the <hamming_or_random_caps> parameter, then random capitalization errors will be applied to <line_error_frequency> % of the final output file. A number of capitalization errors is generated randomly every time the line error percentage is triggered. If a ‘0’ is entered for the <hamming_or_random_caps> parameter, then hamming distance errors will be applied to <line_error_frequency>% of the final output file. Furthermore, the number of hamming distance errors present in a given name after the script has concluded is dependent on the <letter_error_frequency> parameter. The greater this parameter is, the more likely a name within an error line will have a greater number of hamming distance errors. The <delimiter> parameter is used to separate first and last names within the final output error file. The <output_file_name> parameter will be the name of the final output file. The <random_seed> is included for repeatability of trials and is used as the seed of the random generator at the beginning of the script. <total_names_num>, <first_names_num>, and <last_names_num> are used to generate the intermediate name file, from which errors are generated. If you are unsure how this process occurs, consult the name_generator.py description for a more in-depth explanation. 
+This script generates name files, and then uses those name files to output new files, which contain errors. Currently, two error types are supported: capitalization errors and hamming distance errors. The <line_error_frequency> parameter is used to determine what percentage of the script’s output file should have errors. If a ‘1’ is entered for the <hamming_or_random_caps> parameter, then random capitalization errors will be applied to <line_error_frequency> % of the final output file. A number of capitalization errors is generated randomly every time the line error percentage is triggered. If a ‘0’ is entered for the <hamming_or_random_caps> parameter, then hamming distance errors will be applied to <line_error_frequency>% of the final output file. Furthermore, the number of hamming distance errors present in a given name after the script has concluded is dependent on the <letter_error_frequency> parameter. The greater this parameter is, the more likely a name within an error line will have a greater number of hamming distance errors. The <delimiter> parameter is used to separate each first and last name pair within the final output error file. The <output_file_name> parameter will be the name of the final output file. The <random_seed> is included for repeatability of trials and is used as the seed of the random generator at the beginning of the script. <total_names_num>, <first_names_num>, and <last_names_num> are used to generate the intermediate name file, from which errors are generated. If you are unsure how this process occurs, consult the name_generator.py description for a more in-depth explanation. 
 *Note: all percentage parameters are floating-point, so feel free to use non-integer percentages.
 
 #### **Example Usage**
 ```
-$ python random_error_gen.py 1000 100 100 50errors.txt 11 0 , 5 50.0
+$ python random_error_gen.py 1000 100 100 50errors.txt 11 0 $ 5 50.0
 ```
 
 #### **Example Explanation**
-This line will create an output with 1000 names, from an intermediate source of 100 randomly first and last names. The line error percent rate is 5 percent here, so roughly 50 lines will contain errors of some kind. In this specific command, hamming distance errors will appear in the final file, and there will be a 50 percent chance that each letter in each word inside a given error line will be different than the original letter (have a hamming distance of 1). Note that the output file will be 50errors.txt and that the file will have commas as delimiters between first and last names.
+This line will create an output with 1000 names, from an intermediate source of 100 randomly first and last names. The line error percent rate is 5 percent here, so roughly 50 lines will contain errors of some kind. In this specific command, hamming distance errors will appear in the final file, and there will be a 50 percent chance that each letter in each word inside a given error line will be different than the original letter (have a hamming distance of 1). Note that the output file will be 50errors.txt and that the file will have $'s as delimiters between each first and last name pair.
 
 #### **Example Format**
 ```
-LastNameError1, FirstNameError1
-LastNameError2, FirstNameError2
-LastNameError3, FirstNameError3
+LastNameError1, FirstNameError1$
+LastNameError2, FirstNameError2$
+LastNameError3, FirstNameError3$
 etc. …
 ```
 
