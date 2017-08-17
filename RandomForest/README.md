@@ -82,16 +82,32 @@ Currently the final voting stage of the Random Foreset algorithm, combining the 
 
 ## Dependancies
 Make sure that you have the following dependencies installed. If missing, **use pip to install**. (If this doesn't work you will need to download and run python setup file or download the source code and add to PYTHONPATH.)
-- <a href="https://github.com/python/cpython/blob/2.7/Lib/optparse.py">optparse</a>
-- <a href="https://pypi.python.org/pypi/logging/0.4.9.6">logging</a>
-- <a href="https://github.com/python/cpython/blob/3.6/Lib/pickle.py">pickle</a>
-- <a href="https://pypi.python.org/pypi/numpy/1.13.1">NumPy</a>
-- <a href="https://pypi.python.org/pypi/scipy/0.19.1">SciPy</a>
-- <a href="https://pypi.python.org/pypi/scikit-learn">scikit-learn</a>
-- <a href="https://pypi.python.org/pypi/termcolor/1.1.0">termcolor</a>
-- <a href="https://pypi.python.org/pypi/xmltodict/0.11.0">xmltodict</a>
-- <a href="https://pypi.python.org/pypi/enum/0.4.6">enum</a>
-- <a href="https://pypi.python.org/pypi/jsonschema#downloads">jsonschema</a>
+
+
+<p align="center">
+<table style="width:100% border: 0px solid black;">
+  <tr>
+    <td><a href="https://github.com/python/cpython/blob/2.7/Lib/optparse.py">optparse</a></td>
+    <td><a href="https://pypi.python.org/pypi/logging/0.4.9.6">logging</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://github.com/python/cpython/blob/3.6/Lib/pickle.py">pickle</a></td>
+    <td><a href="https://pypi.python.org/pypi/numpy/1.13.1">NumPy</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pypi.python.org/pypi/scipy/0.19.1">SciPy</a></td>
+    <td><a href="https://pypi.python.org/pypi/scikit-learn">scikit-learn</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pypi.python.org/pypi/termcolor/1.1.0">termcolor</a></td>
+    <td><a href="https://pypi.python.org/pypi/xmltodict/0.11.0">xmltodict</a></td>
+  </tr>
+  <tr>
+    <td><a href="https://pypi.python.org/pypi/enum/0.4.6">enum</a></td>
+    <td><a href="https://pypi.python.org/pypi/jsonschema#downloads">jsonschema</a></td>
+  </tr>
+</table>
+</p>
 
 #### PIP install
 To use pip to install in BASH, type the following command: 
