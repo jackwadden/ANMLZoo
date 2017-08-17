@@ -2,7 +2,7 @@
 
 ## Description
 
-A Levenshtein automoton contains a pattern string, *p*, and a Levenshtein edit distance, *d*. Any input string that matches pattern string within the edit distance will report a match. A pattern string is used to populate the Levenshtein automaton states with characters. The edit distance is the number of edits (*insert*, *substitute*, or *delete*) allowed in any matching string. 
+A Levenshtein automaton contains a pattern string, *p*, and a Levenshtein edit distance, *d*. Any input string that matches pattern string within the edit distance will report a match. A pattern string is used to populate the Levenshtein automaton states with characters. The edit distance is the number of edits (*insert*, *substitute*, or *delete*) allowed in any matching string. 
 
 In order to make a Levenshtein automaton for Micron's Automata Processor (AP) we must convert the state machine to an automaton using state transition elements (STE's), which are the single automaton resource units of the AP.
 
@@ -10,7 +10,7 @@ The **leven** program will accept a string or file of strings as input patterns 
 
 (*See  <a href="https://jeffudall.github.io/Levenshtein/Code/">README</a> file in the **code** folder for more information on input syntax and program behavior.*)
 
-The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim, place it in one folder up, and compile it before compiling the **leven** main.cpp (or edit the Make file) C++ code file. 
+The leven program is dependent on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim, place it in one folder up, and compile it before compiling the **leven** main.cpp (or edit the Make file) C++ code file. 
 
 ### Examples and Images
 
@@ -31,12 +31,12 @@ Starting at the first state, (**0.0**) it examines the first character of an inp
 
 Next it would continue on to examine the second character at the new active state, either (**1.0**), (**0.1**), or (**1.1**), and move on to the next state depending if it gets a *match*(right), *deletion*(up), or *insert/substitution*(up and right). 
 
-If it reaches any of the states to the far right (any 5.X states) this indicates the input string (p) matches the given pattern string within the given edit distance (d). However, if it reaches the top level of the automaton (any of the X.2 states) and encounters a futher edit this will terminate it's movement through the Levenshtein automata, thus preventing a positive match.
+If it reaches any of the states to the far right (any 5.X states) this indicates the input string (p) matches the given pattern string within the given edit distance (d). However, if it reaches the top level of the automaton (any of the X.2 states) and encounters a further edit this will terminate it's movement through the Levenshtein automata, thus preventing a positive match.
 
 
 #### Automata Processor Levenshtein Example
 
-STE's only output a logical yes/no match for the character they are looking for. This means that every transition will turn on the attached child STE if it returns a match for the input character. In order to make an Levenshtein automaton extra STE's must be used to recreate the same behavior as the above state Levenshtein automaton(**Figure 1**). These extra STE's will match on any input, and are indicated with the ( **\*** ) chacter. Connecting them as shown below (**Figure 2**) allow us to construct a Levenstein automaton using STE's.
+STE's only output a logical yes/no match for the character they are looking for. This means that every transition will turn on the attached child STE if it returns a match for the input character. In order to make an Levenshtein automaton extra STE's must be used to recreate the same behavior as the above state Levenshtein automaton(**Figure 1**). These extra STE's will match on any input, and are indicated with the ( **\*** ) character. Connecting them as shown below (**Figure 2**) allow us to construct a Levenstein automaton using STE's.
 <p align="center">
 <img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/Levenshtein%20graph%20WAHOO%20w%20arrows%20sm.jpg" width="1000" height="417" alt="STE_wahoo_d2_AP">  
 </p>
@@ -61,12 +61,12 @@ The above Levenshtein automata can be easily created using the **leven** executa
 
 ### Levenshtein Automata Uses
 
-Levenshtein automata are used to find closely matching strings. For example a spell checker could use a Levenshtein automata to look for cloesly matching words for a misspelled word not in its dictionary.
+Levenshtein automata are used to find closely matching strings. For example a spell checker could use a Levenshtein automata to look for closely matching words for a misspelled word not in its dictionary.
 
 ---
 
 ## Automata Files
-Automata are constructed using pattern strings. Each pattern string is broken up into constituent characters and emitted as a Levenshtein automaton with a given Levenshtein edit distance. The **anml** folder contains the following standarized Levenshtein file:
+Automata are constructed using pattern strings. Each pattern string is broken up into constituent characters and emitted as a Levenshtein automaton with a given Levenshtein edit distance. The **anml** folder contains the following standardized Levenshtein file:
 
 ### 24_20x3.1chip.anml
 24 Levenshtein automata iterations. Each automata calculates all strings within Levenshtein edit distance *d*=*3* of a randomly generated pattern string of *width* = *20*. This automata was tuned so that it uses the resources of an entire AP chip.

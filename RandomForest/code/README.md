@@ -63,9 +63,7 @@ MNIST, a canned dataset included in SciKit LEARN, is provided as an example.
 
 ### -m \<model type>
 This parameter specifies model type
-- **`rf`** = **Random Forest** 
-- `brt` = Gradient Boosting
-- `ada` = Ada Boost
+- **`rf`** = **Random Forest** - Right now this is the only model type available
 
 ### -d \<depth of decision trees>
 This parameter specifies the maximum depth of the decision tree learners. 
@@ -83,7 +81,7 @@ You can also specifiy these optional parameters:
 - **`--report`**: You can specify the name of the report (default is *"report.txt"*)  
 - **`--metric`**: Choose the success metric type  
     - **`acc`**: Accuracy score (default)  
-    - ` f1`: F1 score   
+    - `f1` : F1 score   
     - `mse`: Mean Squared Error   
 
 ## Example

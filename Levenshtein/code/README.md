@@ -2,7 +2,7 @@
 
 ## Leven - Levenshtein Automaton ANML Creation Program
 
-The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that can generate Levenshtein automata giving a pattern string, *p*, and Levenshtein edit distance, *d*. The leven program is dependant on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling **main.cpp** (or edit the make file). 
+The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that can generate Levenshtein automata giving a pattern string, *p*, and Levenshtein edit distance, *d*. The leven program is dependent on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling **main.cpp** (or edit the make file). 
 
 The *leven* executable creates a customized ANML file, named *leven.anml*, containing Levenshtein automata based on the command-line parameters in this format:  
 `leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations>`
@@ -12,7 +12,7 @@ The *leven* executable creates a customized ANML file, named *leven.anml*, conta
 ### \<MODE>
 This parameter specifies what mode you would like to use, '`s`' for **String**, '`f`' for **File**, or '`r`' for **Random**.  
 >**String mode** - accepts a string, directly in the command line, and creates a Levenshtein automaton using that pattern string and using a given edit distance.  
->**File mode** - accepts a text file, with each line in the file being implimented as a separate Levenshtein automaton iteration, using a given edit distance.  **NOTE:** *Any empty line in the file will abort importing pattern strings.*  
+>**File mode** - accepts a text file, with each line in the file being implemented as a separate Levenshtein automaton iteration, using a given edit distance.  **NOTE:** *Any empty line in the file will abort importing pattern strings.*  
 >**Random mode** - accepts a character width and edit distance and creates Levenshtein automata using either DNA or alpha-numeric character sets.  
 (See below for more detailed examples of the different modes.)
 
@@ -69,13 +69,14 @@ The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a hre
 <img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="ANMLviewer_wahoo_d2">  
 </p>
 <p align="center">
-<i>Figure 1 - In the image above the green STE's are showing a match with the yellow "`w`" chacter in the input string. (They are three (`*`) STE's and one (`w`) STE). The yellow STE's are the children STE's activated that will examine the next character, "`a`". The orange STE's are the reporting STE's that are activated when reaching the pink characters, "`h`", "`o`", "`o`", "` `", "`W`", ect that are two, or less, edits away from "`wahoo`".
+<i>Figure 1 - In the image above the green STE's are showing a match with the yellow "`w`" character in the input string. (They are three (`*`) STE's and one (`w`) STE). The yellow STE's are the children STE's activated that will examine the next character, "`a`". The orange STE's are the reporting STE's that are activated when reaching the pink characters, "`h`", "`o`", "`o`", "` `", "`W`", ect that are two, or less, edits away from "`wahoo`".
 </i></p>
 
 
 ### **File mode**  
 This mode allows you to import a file with multiple pattern strings to be made into Levenshtein automata.  
-**Note:** The new line character serves as a delimiter separating each pattern string/Levenshtein automata interation. Also  **emply lines are allowed** in text file.  
+**Note:** The new line character serves as a delimiter separating each pattern string/Levenshtein automata iteration. Also   **empty lines are NOT allowed** in string text file.  
+
 The arguments for **File mode** are in this format:
 ```
 leven f <pattern file name> <edit dist>  
@@ -109,7 +110,7 @@ You can see these Levenshtein automata in the ANML Viewer below (**Figure 2**).
 <img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/pattern_Lev_ANML.png" width="833" height="391" alt="pattern_Lev_ANML">  
 </p>
 <p align="center">
-<i>Figure 2 - In the image above the green STE's are showing a match with the yellow "`B`" chacter in the input string. The yellow STE's are the children STE's activated that will examine the next character, "`o`". 
+<i>Figure 2 - In the image above the green STE's are showing a match with the yellow "`B`" character in the input string. The yellow STE's are the children STE's activated that will examine the next character, "`o`". 
 </br><b>Note:</b> The `Bob` Levenshtein automata is reporting (purple STE) at the first B because "B" is two edits away from `Bob`.
 </i></p>
 
