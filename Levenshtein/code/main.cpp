@@ -87,6 +87,10 @@ int main(int argc, char * argv[]) {
 
 			width = p.length(); // Get pattern length for array width
 			cout << "  Pattern width = " << width << endl; // Print out width
+			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+				exit(EXIT_FAILURE);					
+			}
 
 			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
@@ -179,14 +183,19 @@ int main(int argc, char * argv[]) {
 			stringstream rand_width(lev_width); // Get width from command line argument
 			if(rand_width) { // Check if width input is a number
 				rand_width >> width; // If so, set width variable
-				if (width >= 50){ // Check that width is less than 50 - to keep reasonable for AP chip
-					cout << "  ERROR: Pattern too wide!\n\t Must be less than 50 characters" << endl;
+				if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+					cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
 					exit(EXIT_FAILURE);					
 				}
 			}else{ // Output error and end program
 				cout << "\n  ERROR: Improper width!\n\t Must be number amount" << endl;
 				exit(EXIT_FAILURE);
 			}cout << "  Width: " << width << endl;
+
+			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+				exit(EXIT_FAILURE);					
+			}
 
 
 			d = (int)lev_dist[0]-48; // Put edit distance into an int
@@ -465,12 +474,20 @@ int main(int argc, char * argv[]) {
 	patfile.close(); // Close pattern file
 
     /*---------------------------------
-     * Export automaton as anml file
+     * Export automaton as ANML file
      ---------------------------------*/
 	string ANMLname = "leven_";
 	ANMLname += outname + ".anml";
 	ap.automataToANMLFile(ANMLname);
-    cout <<"\n  ANML file created = '" << ANMLname << "'"<< endl;
+    	cout <<"\n  ANML file created = '" << ANMLname << "'"<< endl;
+
+    /*---------------------------------
+     * Export automaton as MNRL file
+     ---------------------------------*/
+	string MNRLname = "leven_";
+	MNRLname += outname + ".mnrl";
+	ap.automataToMNRLFile(MNRLname);
+    	cout <<"  MNRL file created = '" << MNRLname << "'"<< endl;
 
 return 0;
 }
