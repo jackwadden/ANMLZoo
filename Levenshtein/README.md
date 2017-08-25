@@ -19,7 +19,7 @@ The leven program is dependent on <a href="https://github.com/jackwadden/VASim">
 If a Levenshtein string pattern is *p*="*wahoo*" and Levenshtein edit distance is *d*=*2* then the resulting Levenshtein automaton would look like **Figure 1** below. The first number in each state is the column, from zero to the width of the pattern string - 0-5 in this case. The second number is the row, from 0 to the edit distance - 0-2 here.
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/Levenshtein-automaton-sm.jpg" width="647" height="300" alt="state_wahoo_d2">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/Levenshtein/images/Levenshtein-automaton-sm-colored.jpg" width="647" height="300" alt="state_wahoo_d2">  
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@ If it reaches any of the states to the far right (any 5.X states) this indicates
 
 STE's only output a logical yes/no match for the character they are looking for. This means that every transition will turn on the attached child STE if it returns a match for the input character. In order to make an Levenshtein automaton extra STE's must be used to recreate the same behavior as the above state Levenshtein automaton(**Figure 1**). These extra STE's will match on any input, and are indicated with the ( **\*** ) character. Connecting them as shown below (**Figure 2**) allow us to construct a Levenstein automaton using STE's.
 <p align="center">
-<img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/Levenshtein%20graph%20WAHOO%20w%20arrows%20sm.jpg" width="1000" height="417" alt="STE_wahoo_d2_AP">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/Levenshtein/images/Levenshtein_AP_graph_WAHOO_sm.jpg" width="1000" height="417" alt="STE_wahoo_d2_AP">  
 </p>
 
 <p align="center">

@@ -1,21 +1,19 @@
-//Author: Jeffrey Udall
-//Email: judall@pdx.edu
-//https://github.com/jeffudall/
-//2017 University of Virginia
-
-/*Levenshtein wiring algorithm based on:
-T. Tracy II, M. Stan, N. Brunelle, J. Wadden, K. Wang, K. Skadron, G. Robins, 
-"Nondeterministic Finite Automata in Hardware - the Case of the Levenshtein Automaton" 
-University of Virginia, Charlottesville, VA, 
-Proceedings of the Workshop on Architectures and Systems for Big Data (ASBD), 
-in conjunction with ISCA, 
-June 2015.
 /*
+	Leven - Levenshtein automata creator
 
-/*
-Dependances, including automata.h, from
-VASim by Jack Wadden
-https://github.com/jackwadden/VASim
+	Author: Jeffrey Udall 
+	Email: jeff.udall@gmail.com
+	University of Virginia 2017
+
+	Levenshtein wiring algorithm based on paper:
+		T. Tracy II, M. Stan, N. Brunelle, J. Wadden, K. Wang, K. Skadron, G. Robins, 
+		"Nondeterministic Finite Automata in Hardware - the Case of the Levenshtein Automaton" 
+		University of Virginia, Charlottesville, VA, 
+		Proceedings of the Workshop on Architectures and Systems for Big Data (ASBD), 
+		in conjunction with ISCA, June 2015.
+
+	Dependances:
+		VASim by Jack Wadden - https://github.com/jackwadden/VASim
 */
 
 #include "automata.h"
@@ -71,6 +69,8 @@ int main(int argc, char * argv[]) {
 
 		string outname; // set output file name string
 
+		string blank = " ";
+
 		Automata ap; // make automata file
 
 
@@ -87,6 +87,10 @@ int main(int argc, char * argv[]) {
 
 			width = p.length(); // Get pattern length for array width
 			cout << "  Pattern width = " << width << endl; // Print out width
+			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+				exit(EXIT_FAILURE);					
+			}
 
 			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
@@ -126,6 +130,8 @@ int main(int argc, char * argv[]) {
 				}
 				++iter; // increase iterations
 			}cout << "  Iterations: " << iter << endl;
+			
+			stemp.clear();
 
 			pfile.clear();
 			pfile.seekg(0, ios::beg); // Set reading location to begining of file
@@ -136,19 +142,29 @@ int main(int argc, char * argv[]) {
 			int width_max; // make max width var
 			int width_line[iter];
 
+
 			// Find length of each line
 			for (i = 0; i < iter; ++i){
 				getline(pfile, stemp);
-				width_line[i] = stemp.length(); // Get pattern length for array width
+				//cout << "  stemp: " << stemp << endl;
+				width_line[i] = stemp.size(); // Get pattern length for array width
+				//cout << "  width_line: " << width_line[i] << endl;
 			}
 
 			// Find longest line
 			width_max = width_line[0];
-			for (i=0; i<iter; i++){
+			for (i=1; i<iter; i++){
 				if (width_line[i] > width_max) 
 					width_max = width_line[i];
 			}
+
 			width = width_max; // Set width var to max width of strings from file
+			cout << "  Longest width: " << width << endl;
+
+			if (width > 99){ // Output error if width larger than 99
+				cout << "  ERROR: Width too large!\n\t Must be less than 100" << endl;
+				exit(EXIT_FAILURE);
+			}
 
 			pfile.close(); // Close pfile
 
@@ -167,19 +183,24 @@ int main(int argc, char * argv[]) {
 			stringstream rand_width(lev_width); // Get width from command line argument
 			if(rand_width) { // Check if width input is a number
 				rand_width >> width; // If so, set width variable
-				if (width >= 50){ // Check that width is less than 50 - to keep reasonable for AP chip
-					cout << "  ERROR: Pattern too wide!\n\t Must be less than 50 characters" << endl;
+				if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+					cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
 					exit(EXIT_FAILURE);					
 				}
 			}else{ // Output error and end program
-				cout << "  ERROR: Improper width!\n\t Must be number amount" << endl;
+				cout << "\n  ERROR: Improper width!\n\t Must be number amount" << endl;
 				exit(EXIT_FAILURE);
 			}cout << "  Width: " << width << endl;
+
+			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+				exit(EXIT_FAILURE);					
+			}
 
 
 			d = (int)lev_dist[0]-48; // Put edit distance into an int
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
+				cout << "\n  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
 				exit(EXIT_FAILURE);					
 			}	cout << "  Edit dist: " << d << endl;
 
@@ -189,11 +210,11 @@ int main(int argc, char * argv[]) {
 			if(rand_iters) { // Check if iteration input is a number
 				rand_iters >> iter; // If so, set iter variable
 				if (iter >= 100){ // Make sure iterations less than 100 - to keep reasonable for AP chip
-					cout << "  ERROR: Too many iterations!\n\t Must be less than 100" << endl;
+					cout << "\n  ERROR: Too many iterations!\n\t Must be less than 100" << endl;
 					exit(EXIT_FAILURE);					
 				}
 			}else{ // Output error and end program
-				cout << "  ERROR: Improper iterations!\n\t Must be number amount" << endl;
+				cout << "\n  ERROR: Improper iterations!\n\t Must be number amount" << endl;
 				exit(EXIT_FAILURE);
 			}cout << "  Iterations: " << iter << endl;
 
@@ -201,7 +222,7 @@ int main(int argc, char * argv[]) {
 
 			// Check if rand type is correct
 			if ((rand_type != "DNA") && (rand_type != "alphanum")){ 
-				cout << "  ERROR: Incorrect random mode type!\n\t Must be 'DNA' or 'alphanum'" << endl;
+				cout << "\n  ERROR: Incorrect random mode type!\n\t Must be 'DNA' or 'alphanum'" << endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -261,7 +282,7 @@ int main(int argc, char * argv[]) {
 
 
 			if (width <= d){ // Check to make sure width of pattern is bigger than edit distance
-				cout << "\nERROR: String pattern width must be larger than edit distance!" << endl;
+				cout << "\n  ERROR: String pattern width must be larger than edit distance!" << endl;
 				cout << "  Width: " << width << endl;
 				cout << "  Edit dist: " << d << endl;
 				exit(EXIT_FAILURE);
@@ -294,7 +315,20 @@ int main(int argc, char * argv[]) {
 
 					convert_n = ostringstream(); // Clear temp stream string
 					STE_symbol = p[j-1]; // Get STE symbol from p string
+
+					//cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
+
+					if (STE_symbol.compare(blank) == 0 ){ // Check for blank spaces
+						cout << "\n  ERROR: String pattern cannot contain blank spaces!" << endl;
+						cout << "  Pattern[" << w+1 << "] character[" << j << "] = [" << STE_symbol << "]" << endl;
+						exit(EXIT_FAILURE);
+					}
+
 					STE_symbol = "["+STE_symbol+"]"; // Add brackets around character
+
+					//cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
+					//cout << "  blank =  [" << blank << "]" << endl;
+
 
 					if (j == i+1)  // Set starting and late start blocks
 						// Make new STE with name, symbol, and start values
@@ -440,12 +474,20 @@ int main(int argc, char * argv[]) {
 	patfile.close(); // Close pattern file
 
     /*---------------------------------
-     * Export automaton as anml file
+     * Export automaton as ANML file
      ---------------------------------*/
 	string ANMLname = "leven_";
 	ANMLname += outname + ".anml";
 	ap.automataToANMLFile(ANMLname);
-    cout <<"\n  ANML file created = '" << ANMLname << "'"<< endl;
+    	cout <<"\n  ANML file created = '" << ANMLname << "'"<< endl;
+
+    /*---------------------------------
+     * Export automaton as MNRL file
+     ---------------------------------*/
+	string MNRLname = "leven_";
+	MNRLname += outname + ".mnrl";
+	ap.automataToMNRLFile(MNRLname);
+    	cout <<"  MNRL file created = '" << MNRLname << "'"<< endl;
 
 return 0;
 }

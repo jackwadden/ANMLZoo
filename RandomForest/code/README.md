@@ -1,4 +1,4 @@
-# automatize - RF Automata Generator
+# Automatize - Random Forest Automata Generator
 
 The Random Forest automata generator, **automatize.py**, is an Object-Oriented style Python script which will generate an ANML file compatible with the Micron Automata Processor(AP).
 

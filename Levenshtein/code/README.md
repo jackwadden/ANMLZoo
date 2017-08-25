@@ -4,7 +4,7 @@
 
 The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that can generate Levenshtein automata giving a pattern string, *p*, and Levenshtein edit distance, *d*. The leven program is dependent on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling **main.cpp** (or edit the make file). 
 
-The *leven* executable creates a customized ANML file, named *leven.anml*, containing Levenshtein automata based on the command-line parameters in this format:  
+The *leven* executable creates a customized ANML file, named *leven_[input info].anml*, and a MNRL file, named *leven_[input info].mnrl*,containing Levenshtein automata based on the command-line parameters in this format:  
 `leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations>`
 
 ## Usage Parameter Descriptions
@@ -12,7 +12,7 @@ The *leven* executable creates a customized ANML file, named *leven.anml*, conta
 ### \<MODE>
 This parameter specifies what mode you would like to use, '`s`' for **String**, '`f`' for **File**, or '`r`' for **Random**.  
 >**String mode** - accepts a string, directly in the command line, and creates a Levenshtein automaton using that pattern string and using a given edit distance.  
->**File mode** - accepts a text file, with each line in the file being implemented as a separate Levenshtein automaton iteration, using a given edit distance.  **NOTE:** *Any empty line in the file will abort importing pattern strings.*  
+>**File mode** - accepts a text file, with each line in the file being implemented as a separate Levenshtein automaton iteration, using a given edit distance. **NOTE:** *Do not include empty lines or spaces. Any empty line in the file will abort importing pattern strings. A space will cause an error.*  
 >**Random mode** - accepts a character width and edit distance and creates Levenshtein automata using either DNA or alpha-numeric character sets.  
 (See below for more detailed examples of the different modes.)
 
@@ -153,13 +153,18 @@ This will make five random Levenshtein automata, each five alpha-numeric chars l
 </p>
 
 
-### Output ANML file name
-After the program concludes, an ANML file will be generated in the same folder as the **leven** executable is run from. The name of the ANML file will begin with "*leven_*" and then will be based on the string/file name/random type and edit distance (in addition to the width and iterations for the random mode). 
+### Output ANML and MNRL file names
+After the program concludes, an ANML and MNRL files will be generated in the same folder as the **leven** executable is run from. The name of the ANML and MNRL file will begin with "*leven_*" then contain info based on the string/file name/random type and edit distance (in addition to the width and iterations for the random mode), and end with the "*.anml*" or "*.mnrl*" file extensions. 
 
 **Examples:**  
 `leven_wahoo_d2.anml`  
+`leven_wahoo_d2.mnrl` 
+
 `leven_test.txt_d2.anml`  
+`leven_test.txt_d2.mnrl`  
+
 `leven_DNA_w5_d3_x20.anml`  
+`leven_DNA_w5_d3_x20.mnrl`  
 
 ---
 
