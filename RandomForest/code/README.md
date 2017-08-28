@@ -93,6 +93,10 @@ $ trainEnsemble.py -c mnist -m rf -d 8 -n 10
 ```
 This will make an Random Forest using the MNIST canned dataset with a maximum depth of 8 tree learners and 10 trees in the ensemble. 
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_run_train.png" width="700" height="167" alt="trainEnsemble screen shot">  
+</p>
+
 ## Outputs
 The **trainEnsemble.py** script creates the follwing files:  
 **model.pickle**: a serialized Scikit Learn Random Forest model  
