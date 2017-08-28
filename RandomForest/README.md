@@ -137,7 +137,7 @@ ImportError: No module named mnrl
 
 ## Data Input
 
-You can use the canned MNIST data set when running this benchmark (see <a href="https://github.com/jackwadden/ANMLZoo/tree/master/RandomForest/code"> README in code folder</a>). However, if you would like to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz). Please see the following examples found in the <a href="https://github.com/tjt7a/rfautomata/tree/master/data">data</a> folder of RF Automata.
+The canned MNIST data set can be used when running the Random Forest benchmark (see <a href="https://github.com/jackwadden/ANMLZoo/tree/master/RandomForest/code"> README in code folder</a>); however, if you would like to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz).
 
 ### ocrExtractor
 
