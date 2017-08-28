@@ -1,7 +1,7 @@
 # RandomForest
 ## Description
 
-This benchmark is an open-source implementation of decision tree-based (Random Forest, Boosted Regression Trees, Adaboost) machine learning models as automata on Micron's Automata Processor (AP) and is written in Python in the Object-Oriented style. This code trains a decision tree-based model with <a href="http://scikit-learn.org/stable/index.html#">scikit-learn</a> (on a CPU), and transforms the resulting model into the ANML format, an XML-like representation of nondeterministic finite automata (NFA) for the Automata Processor. 
+This benchmark is an open-source implementation of decision tree-based (Random Forest, Boosted Regression Trees, AdaBoost) machine learning models as automata on Micron's Automata Processor (AP) written in Python in Object-Oriented style. This code trains a decision tree-based model with <a href="http://scikit-learn.org/stable/index.html#">scikit-learn</a> (on a CPU), and transforms the resulting model into the ANML format, an XML-like representation of nondeterministic finite automata (NFA) for the Automata Processor. 
 
 For more about the Automata Processor, visit <a href="http://cap.virginia.edu/">CAP's website</a>. 
 
