@@ -49,6 +49,37 @@ The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a hre
 
 ---
 
+# Obtain Final Results with VASim
+
+To get the final outcome from your date you must bring the ANML file and input data into <a href="https://github.com/jackwadden/VASim">VASim</a>. You can then output a report showing the final output from each of the trees in the forest. To obtain a final result you would simply need to take the most popular answer from the trees. 
+
+The command line parameters are in this format:  
+`vasim <ANML file> <input file> --report`
+
+For more information on VASim see the VASim page <a href="http://www.cs.virginia.edu/~jpw8bd/vasim_docs/">here</a>.
+
+## Example
+```
+$ vasim mymodel.anml input_file.bin --report
+```
+This will import your ANML file and input and make you a report .txt file with the results.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/VASim_output_report.png" width="912" height="639" alt="VASim example">  
+</p>
+
+You can then open up the <a href="https://github.com/jeffudall/ANMLZooCopy/blob/master/RandomForest/code/output/reports_0tid_0packet.txt">txt file</a> that is created and see the results for each input file. 
+
+In the below example using MNIST canned data (see **Input File Generator - trainEnsemble.py** below) you can see that the 7259 sample was unanimously chosen as option 1 (zero), while sample 7686 thought was mostly recognized as option 6 (five) but a few thought it was option 4 (three) or option 7 (six). For sample 8113 it was almost unanimously recognized as option 4 (three) but one tree thought it was option 6 (five). 
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/VASim_results.png" width="250" height="511" alt="VASim output">  
+</p>
+
+
+---
+
+
 # Input File Generator - trainEnsemble.py 
 
 ## Inputs
@@ -106,7 +137,7 @@ The **trainEnsemble.py** script creates the follwing files:
 ---
 
 ## Other Inputs
-If you do not need customized inputs, the "inputs" folder contains a number of standardized input files.
+If you do not need customized inputs, the *inputs* folder contains a number of standardized input files.
 
 ---
 
