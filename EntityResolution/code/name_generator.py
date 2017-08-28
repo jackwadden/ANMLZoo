@@ -196,7 +196,7 @@ def randomization_step2(first_name_intermed_file,last_name_intermed_file,delimit
                  first_name_to_add_f = first_name_to_add.replace("\n","")
                  last_name_to_add_f = last_name_to_add.replace("\n","")
                  
-                 outputfile.write(last_name_to_add_f + delimiter_str + first_name_to_add_f)
+                 outputfile.write(last_name_to_add_f +','+ first_name_to_add_f+ delimiter_str )
                  outputfile.write('\n')
 
          else:
@@ -208,7 +208,7 @@ def randomization_step2(first_name_intermed_file,last_name_intermed_file,delimit
                  first_name_to_add_f = first_name_to_add.replace("\n","")
                  last_name_to_add_f = last_name_to_add.replace("\n","")
                  
-                 outputfile.write(last_name_to_add_f + delimiter_str + first_name_to_add_f)
+                 outputfile.write(last_name_to_add_f +','+ first_name_to_add_f + delimiter_str)
                  outputfile.write('\n')
 
                   
