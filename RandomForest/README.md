@@ -137,7 +137,7 @@ ImportError: No module named mnrl
 
 ## Data Input
 
-In order to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz). Please see the following examples found in the <a href="https://github.com/tjt7a/rfautomata/tree/master/data">data</a> folder of RF Automata.
+You can use the canned MNIST data set when running this benchmark (see <a href="https://github.com/jackwadden/ANMLZoo/tree/master/RandomForest/code"> README in code folder</a>). However, if you would like to use this code to train ensemble modes from your own data, it is necessary to write an extractor for your raw data. This script processes your raw data and converts it into Numpy X and y matrices. These are then stored in a Numpy Zip file (.npz). Please see the following examples found in the <a href="https://github.com/tjt7a/rfautomata/tree/master/data">data</a> folder of RF Automata.
 
 ### ocrExtractor
 
@@ -159,16 +159,16 @@ The mslrExtractor program extracts the learn-to-rank feature matrix (X) and resu
 
 ## Automata Files
 
-### 300f_15t_from_model_MNIST.anml
-A random forest with 15 trees and 300 features per input trained on the MNIST digit recognition library. This ANML file was generated as a part of the original ANMLZoo benchmark suite. It was generated incorrectly and thus should not be considered a "standard candle". However, it is a valid benchmark and is maintained for posterity.
+### <a href="https://github.com/jackwadden/ANMLZoo/raw/master/RandomForest/anml/300f_15t_tree_from_model_MNIST.anml">300f_15t_from_model_MNIST.anml</a> 
+A random forest with 15 trees and 300 features per input trained on the MNIST digit recognition library. This ANML filewas generated as a part of the original ANMLZoo benchmark suite. It was generated incorrectly and thus should not be considered a "standard candle". However, it is a valid benchmark and is maintained for posterity.
 
-### rf.1chip.anml
-A portion of 300f_15t_from_model_MNIST.anml properly pruned to max out the resources of an AP chip.
+### <a href="https://github.com/jackwadden/ANMLZoo/raw/master/RandomForest/anml/rf.1chip.anml">rf.1chip.anml</a>
+This ANML file is a portion of 300f_15t_from_model_MNIST.anml properly pruned to max out the resources of an AP chip.
 
 ## Inputs
-### mnist_1MB.input
+### <a href="https://github.com/jackwadden/ANMLZoo/raw/master/RandomForest/inputs/mnist_1MB.input">mnist_1MB.input</a>
 
-### mnist_10MB.input
+### <a href="https://github.com/jackwadden/ANMLZoo/raw/master/RandomForest/inputs/mnist_10MB.input">mnist_10MB.input</a>
 
 # References
 **[1]** Tracy II, T., Fu, Y., Roy, I., Jonas, E., & Glendenning, P. (2016, June). Towards Machine Learning on the Automata Processor. In International Conference on High Performance Computing (pp. 200-218). Springer International Publishing, 2016.
