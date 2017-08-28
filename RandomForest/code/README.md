@@ -115,10 +115,10 @@ In order to get an approximation of the performance of the same Random Forest on
 
 ## Usage Parameters
 All parameters are optional parameters:
-- **`-n \<test iterations>`**: Number of test iterations (defaults to 1000)
-- **`-j \<threads>`**: Number of threads used to run the model
-- **`-m \<model file>`**: The serialized model file name (defaults to *model.pickle*)
-- **`-t \<testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+- **`-m <model file>`**: The serialized model file name (defaults to *model.pickle*)
+- **`-t <testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+- **`-n <test iterations>`**: Number of test iterations (defaults to 1000)
+- **`-j <threads>`**: Number of threads used to run the model
 - **`-v`**: Print verbose descriptions of each step in program's progress.
 
 ## Example
@@ -126,10 +126,13 @@ If you are using the default settings you can simply run it via this command:
 ```
 $ test_cpu.py
 ```
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_cpu_run.png" width="631" height="115" alt="test_cpu screen shot">  
+</p>
 
 If using custom settings you can provide other options in this format:
 ```
-$ test_cpu.py -n <test iterations> -j <threads> -m <model file> -t <testing data>
+$ test_cpu.py -m <model file> -t <testing data> -n <test iterations> -j <threads>
 ```
 
 ## Output
