@@ -5,7 +5,7 @@ The Random Forest automata generator, **automatize.py**, is an Object-Oriented s
 For program dependancies see main <a href="https://github.com/jeffudall/ANMLZooCopy/blob/master/RandomForest/README.md">RandomForest README</a>.
 
 ## Inputs
-The **automatize.py** script will create an ANML file when given a model pickle file, *m*.
+The **automatize.py** script will create an ANML file when given a model pickle file, *m*. We have provided the <a href="https://github.com/jeffudall/ANMLZooCopy/raw/master/RandomForest/code/models/randomforest/model.pickle">model.pickle</a> example file in the models folder. 
 
 The command line parameters are in this format:  
 `automatize.py -m <model file> - a <output ANML name> [OPTIONS]`
@@ -34,7 +34,10 @@ $ automatize.py -m model.pickle -a mymodel.anml --short -v
 This will use a short version of the model.pickle file to make an ANML file named *mymodel.anml*.
 
 <p align="center">
-<img src="" width="" height="" alt="">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%201a.png" width="1086" height="315" alt="">  
+</p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%202.png" width="1087" height="555" alt="">  
 </p>
 
 ## Outputs
@@ -42,7 +45,7 @@ The **automatize.py** script creates the follwing files:
 - **model.anml**: This is the ANML-formatted automata file
 - **input_file.bin**: A transformed input file for testing. It was generated from the testing_data.pickle file.
 
-The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia.
+The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="https://github.com/dankramp/AutomataLab">AutomataLab</a> viewer from the University of Virginia.
 
 ---
 
