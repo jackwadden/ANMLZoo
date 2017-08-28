@@ -5,7 +5,7 @@ The Random Forest automata generator, **automatize.py**, is an Object-Oriented s
 For program dependancies see main <a href="https://github.com/jeffudall/ANMLZooCopy/blob/master/RandomForest/README.md">RandomForest README</a>.
 
 ## Inputs
-The **automatize.py** script will create an ANML file when given a model pickle file, *m*.
+The **automatize.py** script will create an ANML file when given a model pickle file, *m*. We have provided the <a href="https://github.com/jeffudall/ANMLZooCopy/raw/master/RandomForest/code/models/randomforest/model.pickle">model.pickle</a> example file in the models folder. 
 
 The command line parameters are in this format:  
 `automatize.py -m <model file> - a <output ANML name> [OPTIONS]`
@@ -34,7 +34,10 @@ $ automatize.py -m model.pickle -a mymodel.anml --short -v
 This will use a short version of the model.pickle file to make an ANML file named *mymodel.anml*.
 
 <p align="center">
-<img src="" width="" height="" alt="">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%201a.png" width="1086" height="315" alt="">  
+</p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%202.png" width="1087" height="555" alt="">  
 </p>
 
 ## Outputs
@@ -42,9 +45,40 @@ The **automatize.py** script creates the follwing files:
 - **model.anml**: This is the ANML-formatted automata file
 - **input_file.bin**: A transformed input file for testing. It was generated from the testing_data.pickle file.
 
-The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia.
+The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="https://github.com/dankramp/AutomataLab">AutomataLab</a> viewer from the University of Virginia.
 
 ---
+
+# Obtain Final Results with VASim
+
+To get the final outcome from your date you must bring the ANML file and input data into <a href="https://github.com/jackwadden/VASim">VASim</a>. You can then output a report showing the final output from each of the trees in the forest. To obtain a final result you would simply need to take the most popular answer from the trees. 
+
+The command line parameters are in this format:  
+`vasim <ANML file> <input file> --report`
+
+For more information on VASim see the VASim page <a href="http://www.cs.virginia.edu/~jpw8bd/vasim_docs/">here</a>.
+
+## Example
+```
+$ vasim mymodel.anml input_file.bin --report
+```
+This will import your ANML file and input and make you a report .txt file with the results.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/VASim_output_report.png" width="912" height="639" alt="VASim example">  
+</p>
+
+You can then open up the <a href="https://github.com/jeffudall/ANMLZooCopy/blob/master/RandomForest/code/output/reports_0tid_0packet.txt">txt file</a> that is created and see the results for each input file. 
+
+In the below example using MNIST canned data (see **Input File Generator - trainEnsemble.py** below) you can see that the 7259 sample was unanimously chosen as option 1 (zero), while sample 7686 thought was mostly recognized as option 6 (five) but a few thought it was option 4 (three) or option 7 (six). For sample 8113 it was almost unanimously recognized as option 4 (three) but one tree thought it was option 6 (five). 
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/VASim_results.png" width="250" height="511" alt="VASim output">  
+</p>
+
+
+---
+
 
 # Input File Generator - trainEnsemble.py 
 
@@ -90,6 +124,10 @@ $ trainEnsemble.py -c mnist -m rf -d 8 -n 10
 ```
 This will make an Random Forest using the MNIST canned dataset with a maximum depth of 8 tree learners and 10 trees in the ensemble. 
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_run_train.png" width="700" height="167" alt="trainEnsemble screen shot">  
+</p>
+
 ## Outputs
 The **trainEnsemble.py** script creates the follwing files:  
 **model.pickle**: a serialized Scikit Learn Random Forest model  
@@ -99,7 +137,7 @@ The **trainEnsemble.py** script creates the follwing files:
 ---
 
 ## Other Inputs
-If you do not need customized inputs, the "inputs" folder contains a number of standardized input files.
+If you do not need customized inputs, the *inputs* folder contains a number of standardized input files.
 
 ---
 
@@ -108,10 +146,10 @@ In order to get an approximation of the performance of the same Random Forest on
 
 ## Usage Parameters
 All parameters are optional parameters:
-- **`-n \<test iterations>`**: Number of test iterations (defaults to 1000)
-- **`-j \<threads>`**: Number of threads used to run the model
-- **`-m \<model file>`**: The serialized model file name (defaults to *model.pickle*)
-- **`-t \<testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+- **`-m <model file>`**: The serialized model file name (defaults to *model.pickle*)
+- **`-t <testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+- **`-n <test iterations>`**: Number of test iterations (defaults to 1000)
+- **`-j <threads>`**: Number of threads used to run the model
 - **`-v`**: Print verbose descriptions of each step in program's progress.
 
 ## Example
@@ -119,10 +157,13 @@ If you are using the default settings you can simply run it via this command:
 ```
 $ test_cpu.py
 ```
+<p align="center">
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_cpu_run_1.png" width="631" height="90" alt="test_cpu screen shot">  
+</p>
 
 If using custom settings you can provide other options in this format:
 ```
-$ test_cpu.py -n <test iterations> -j <threads> -m <model file> -t <testing data>
+$ test_cpu.py -m <model file> -t <testing data> -n <test iterations> -j <threads>
 ```
 
 ## Output
