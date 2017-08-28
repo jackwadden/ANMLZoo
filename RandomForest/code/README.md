@@ -127,7 +127,7 @@ If you are using the default settings you can simply run it via this command:
 $ test_cpu.py
 ```
 <p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_cpu_run.png" width="631" height="115" alt="test_cpu screen shot">  
+<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test_cpu_run_1.png" width="631" height="90" alt="test_cpu screen shot">  
 </p>
 
 If using custom settings you can provide other options in this format:
