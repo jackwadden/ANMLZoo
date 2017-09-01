@@ -53,7 +53,6 @@ int main(int argc, char * argv[]) {
 		char mode = *argv[1]; // Set mode
 		string stringfilewidth = argv[2];
 		string lev_dist = argv[3]; // Get lev edit dist from input
-		string lev_iter = argv[5]; // Get number of iterations for rand from input
 
 		int i, j; // set counting vars
 
@@ -87,14 +86,15 @@ int main(int argc, char * argv[]) {
 
 			width = p.length(); // Get pattern length for array width
 			cout << "  Pattern width = " << width << endl; // Print out width
-			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+
+			if (width >= 200){ // Check that width is less than 200 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t (Must be 199 characters or less)" << endl;
 				exit(EXIT_FAILURE);					
 			}
 
 			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
+				cout << "  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
 				exit(EXIT_FAILURE);					
 			}cout << "  Edit dist: " << d << endl;
 	
@@ -111,7 +111,7 @@ int main(int argc, char * argv[]) {
 
 			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
+				cout << "  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
 				exit(EXIT_FAILURE);					
 			}cout << "  Edit dist: " << d << endl;
 
@@ -161,8 +161,8 @@ int main(int argc, char * argv[]) {
 			width = width_max; // Set width var to max width of strings from file
 			cout << "  Longest width: " << width << endl;
 
-			if (width > 99){ // Output error if width larger than 99
-				cout << "  ERROR: Width too large!\n\t Must be less than 100" << endl;
+			if (width >= 200){ // Output error if width larger than 199
+				cout << "  ERROR: Width too large!\n\t (Must be less than 200)" << endl;
 				exit(EXIT_FAILURE);
 			}
 
@@ -177,30 +177,44 @@ int main(int argc, char * argv[]) {
 		else if (mode == 'r'){ 
 			cout << "\n  Mode: RANDOM" << endl;
 
+			if (argv[4] == 0){ // Check that there is rand type
+					cout << "\n  ERROR: Need random type (DNA or alphanum)" << endl;
+					cout <<"\n  USAGE: leven r [width] [edit dist] [DNA or alphanum] [iterations]"<< endl;
+					exit(EXIT_FAILURE);					
+			}
+
+
+
+			if (argv[5] == 0){ // Check that there is rand iterations
+					cout << "\n  ERROR: Need iteration ammount!" << endl;
+					cout <<"\n  USAGE: leven r [width] [edit dist] [DNA or alphanum] [iterations]"<< endl;
+					exit(EXIT_FAILURE);					
+			}
+
+			string lev_iter = argv[5]; // Get number of iterations for rand from input
+
 			// Set vars
 			string lev_width = stringfilewidth; // Get levenshtein width from input
 
 			stringstream rand_width(lev_width); // Get width from command line argument
+
 			if(rand_width) { // Check if width input is a number
 				rand_width >> width; // If so, set width variable
-				if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-					cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
-					exit(EXIT_FAILURE);					
-				}
 			}else{ // Output error and end program
-				cout << "\n  ERROR: Improper width!\n\t Must be number amount" << endl;
+				cout << "\n  ERROR: Improper width!\n\t (Must be number amount)" << endl;
 				exit(EXIT_FAILURE);
 			}cout << "  Width: " << width << endl;
 
-			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
+			
+			if (width >= 200){ // Output error if width larger than 199 - to keep reasonable for AP chip
+				cout << "  ERROR: Pattern too wide!\n\t (Must be 199 characters or less)" << endl;
 				exit(EXIT_FAILURE);					
 			}
 
 
 			d = (int)lev_dist[0]-48; // Put edit distance into an int
 			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "\n  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
+				cout << "\n  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
 				exit(EXIT_FAILURE);					
 			}	cout << "  Edit dist: " << d << endl;
 
@@ -252,6 +266,11 @@ int main(int argc, char * argv[]) {
 		STE *index[iter][d + 1][width + 1][2];
 		//  Size is: [iterations], [edit dist + 1], [max string width + 1], [2 - char or star]
 
+
+		string width_name; // width temp name string
+		string iter_name; // iter temp name string
+		ostringstream temp_n; // temp string for renaming 
+
 		/*---------------------------
 		 	Create ANML file
 		---------------------------*/
@@ -300,6 +319,9 @@ int main(int argc, char * argv[]) {
 					// Create STE name
 					i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 1;
 
+
+
+					/*
 					// Put STE name into temp string
 					if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
 						convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
@@ -309,6 +331,32 @@ int main(int argc, char * argv[]) {
 						convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
 					else  //If width and iter smaller than 10, add 0 in front of both
 						convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+					*/
+
+
+					if (j <= 9) // If width smaller than 10, add 00 in front
+						temp_n << "00" << i_name[2];
+					else if ( (j > 9) || (j <= 99))  // If 10 or higher add 0 in front
+						temp_n << "0" << i_name[2];
+					else // If 100 or higher don't add any 0's in front
+						temp_n << i_name[2];
+					width_name = temp_n.str(); // Copy name into width_name var
+					//cout << "  width_name: " << width_name << endl;
+					temp_n = ostringstream(); // Clear temp stream string
+
+
+					if (w <= 9) // If width smaller than 10, add 00 in front
+						temp_n << "00" << i_name[0];
+					else if ( (w > 9) || (w <= 99)) // If 10 or higher add 0 in front
+						temp_n << "0" << i_name[0];
+					else // If 100 or higher don't add any 0's in front
+						temp_n << i_name[0];
+					iter_name = temp_n.str(); // Copy name into iter_name var
+					//cout << "  iter_name: " << iter_name << endl;
+					temp_n = ostringstream(); // Clear temp stream string
+
+					// Put STE name into temp string
+					convert_n << iter_name << i_name[1] << width_name << i_name[3];
 
 					STE_name = convert_n.str(); // Copy STE name into STE_name var
 					//cout << "  char STE name: " << STE_name << endl;
@@ -347,6 +395,7 @@ int main(int argc, char * argv[]) {
 					// Create STE name
 					i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 0; 
 
+					/*
 					// Put STE name into temp string
 					if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
 						convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
@@ -356,9 +405,36 @@ int main(int argc, char * argv[]) {
 						convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
 					else  //If width and iter smaller than 10, add 0 in front of both
 						convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+					*/
 
+					if (j <= 9) // If width smaller than 10, add 00 in front
+						temp_n << "00" << i_name[2];
+					else if ( (j > 9) || (j <= 99))  // If 10 or higher add 0 in front
+						temp_n << "0" << i_name[2];
+					else // If 100 or higher don't add any 0's in front
+						temp_n << i_name[2];
+					width_name = temp_n.str(); // Copy name into width_name var
+					//cout << "  width_name: " << width_name << endl;
+					temp_n = ostringstream(); // Clear temp stream string
+
+
+					if (w <= 9) // If width smaller than 10, add 00 in front
+						temp_n << "00" << i_name[0];
+					else if ( (w > 9) || (w <= 99)) // If 10 or higher add 0 in front
+						temp_n << "0" << i_name[0];
+					else // If 100 or higher don't add any 0's in front
+						temp_n << i_name[0];
+					iter_name = temp_n.str(); // Copy name into iter_name var
+					//cout << "  iter_name: " << iter_name << endl;
+					temp_n = ostringstream(); // Clear temp stream string
+
+
+					// Put STE name into temp string
+					convert_n << iter_name << i_name[1] << width_name << i_name[3];
+					
 					STE_name = convert_n.str(); // Clear temp stream string
 					//cout << "  star STE name: " << STE_name << endl;
+					
 
 					convert_n = ostringstream(); // clear stream string
 
@@ -597,3 +673,5 @@ void usage(char * argv) { // Usage information funct
     cout <<"\t\t"<< "This will make 2 random lev automata"<< endl;
     cout <<"\t\t"<< "each 5 alpha-numeric chars long with a lev dist of 2"<< endl;
 }
+
+
