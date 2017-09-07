@@ -44,7 +44,7 @@ This suite was originally compiled by Jack Wadden (jackwadden@gmail.com).
  
 If you use this benchmark suite in a publication, please use the following citation:
 
-Wadden, J., Dang, V., Brunelle, N., Tracy II, T., Guo, D., Sadredini, E., Wang, K., Bo, C., Robins, G., Stan, M., and Skadron, S. "ANMLZoo: A Benchmark Suite for Exploring Bottlenecks in Automata Processing Engines and Architectures." 2016 IEEE International Symposium on Workload Characterization (IISWC'16). IEEE, 2016.
+Wadden, J., Dang, V., Brunelle, N., Tracy II, T., Guo, D., Sadredini, E., Wang, K., Bo, C., Robins, G., Stan, M., and Skadron, K. "ANMLZoo: A Benchmark Suite for Exploring Bottlenecks in Automata Processing Engines and Architectures." 2016 IEEE International Symposium on Workload Characterization (IISWC'16). IEEE, 2016.
 
 ```
 @inproceedings{ANMLZoo,  
@@ -57,3 +57,6 @@ Wadden, J., Dang, V., Brunelle, N., Tracy II, T., Guo, D., Sadredini, E., Wang, 
 
 ## License
 Each benchmark and automata processing engine in ANMLZoo is individually licensed. Please refer to the benchmark directories for individual license files.
+
+## Acknowledgements
+This work was started at the University of Virginia and was supported by the following organizations at some point in time: The ARCS Foundation, the National Science Foundation (CCF-1116673, CCF-1629450, EF-1124931), Micron Technologies, and the Center for Future Architectures Research (C-FAR), one of the six centers of STARnet, a Semiconductor Research Corporation program sponsored by MARCO and Darpa.
