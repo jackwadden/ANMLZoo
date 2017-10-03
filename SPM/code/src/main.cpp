@@ -110,7 +110,6 @@ void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_
 {
 
 	Automata ap;
-	item_num += 1;
 	/***************************
 	element creation and addition to network, parameters are set
 	***************************/
@@ -135,64 +134,87 @@ void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_
 
 	// placeholder elements
 	vector<STE *> placeholder_elem;
-	for (int i = 0; i < item_num; i++) {
+	for (int i = 0; i < item_num * objbyte; i++) {
 		STE_name = "p" + to_string(i);
 		STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
 		placeholder_elem.push_back(STE_temp);
 	}
-	for (int i = 0; i < item_num; i++) {
+	for (int i = 0; i < item_num * objbyte; i++) {
 		ap.rawAddSTE(placeholder_elem[i]);
 	}
 	// item elements
 	vector<STE *> item_elem;
-	for (int i = 0; i < item_num; i++) {
+	for (int i = 0; i < item_num * objbyte; i++) {
 		STE_name = "i" + to_string(i);
-		if (i == item_num - 1 && NC) {
-			STE_temp = new STE(STE_name, "[\\xFE]", "start-of-data");
-			STE_temp->setReporting(true);
-		}
-		else {
-			STE_temp = new STE(STE_name, "[\\x0A]", "all-input");
-		}
+		STE_temp = new STE(STE_name, "[\\x0A]", "none");
 		item_elem.push_back(STE_temp);
 	}
-	for (int i = 0; i < item_num; i++) {
+	for (int i = 0; i < item_num * objbyte; i++) {
 		ap.rawAddSTE(item_elem[i]);
 	}
+	// last placeholder & item elements
+	STE *last_p, *last_i;
+	last_p = new STE("last_p", "[\\x00-\\xFD]", "none");
+	last_i = new STE("last_i", "[\\xFE]", "none");
+	if (NC)
+		last_i->setReporting(true);
 
-	// with or without counter
-	Counter *CNT_temp;
-	if (!NC) {
-		CNT_temp = new Counter("Counter", 1000, "pulse");
-		STE_temp = new STE("Reporter", "[\\xFF]", "none");
-		STE_temp->setReporting(true);
-		ap.rawAddSpecialElement(CNT_temp);
-		ap.rawAddSTE(STE_temp);
-	}
+	ap.rawAddSTE(last_p);
+	ap.rawAddSTE(last_i);
+
 
 	/***************************
 	element connections
 	***************************/
-	// last_item->counter->reporter
+
+	//  create/connect reporter and counter
 	if (!NC) {
-		ap.addEdge(item_elem[item_num - 1], CNT_temp);
-		ap.addEdge(CNT_temp, STE_temp);
+		Counter *CNT_temp;
+		STE *REP_temp;
+		CNT_temp = new Counter("Counter", 1000, "pulse");
+		REP_temp = new STE("Reporter", "[\\xFF]", "none");
+		REP_temp->setReporting(true);
+		ap.rawAddSpecialElement(CNT_temp);
+		ap.rawAddSTE(REP_temp);
+
+		ap.addEdge(last_i, CNT_temp);
+		ap.addEdge(CNT_temp, REP_temp);
 	}
+
+	// last item
+	ap.addEdge(item_elem[item_num - 1], last_p);
+	ap.addEdge(item_elem[item_num - 1], last_i);
+	ap.addEdge(last_p, last_i);
 
 	// Entry->placeholder->item
 	for (int i = 0; i < entry_num; i++) {
-		ap.addEdge(placeholder_elem[i], entry_elem[i]);
-		ap.addEdge(entry_elem[i], placeholder_elem[i]);
-		ap.addEdge(entry_elem[i], item_elem[i]);
+		ap.addEdge(entry_elem[i], placeholder_elem[i * objbyte]);
+		ap.addEdge(entry_elem[i], item_elem[i * objbyte]);
+		if (optimized)
+			ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], entry_elem[i]);
 	}
 
 	// placeholder->placeholder; placeholder->item; item->next_item; item->next_placeholder
 	for (int i = 0; i < item_num; i++) {
-		ap.addEdge(placeholder_elem[i], placeholder_elem[i]);
-		ap.addEdge(placeholder_elem[i], item_elem[i]);
+		// P[i][0] -> P[i][1] -> ... -> P[i][objbyte - 1] -> P[i][0]
+		for (int j = 0; j < objbyte; j++) {
+			ap.addEdge(
+				placeholder_elem[i * objbyte + j % objbyte],
+				placeholder_elem[i * objbyte + (j + 1) % objbyte]);
+		}
+
+		// P[i][objbyte - 1] -> I[i][0]
+		ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], item_elem[i * objbyte]);
+
+		// I[i][0] -> I[i][1] -> ... -> I[i][objbyte - 1]
+		for (int j = 0; j < objbyte - 1; j++) {
+			ap.addEdge(item_elem[i * objbyte + j], item_elem[i * objbyte + (j + 1)]);
+		}
+
+		// I[i][objbyte - 1] -> P[i + 1][0], I[i][objbyte - 1] -> I[i + 1][0]
 		if (i < item_num - 1) {
-			ap.addEdge(item_elem[i], placeholder_elem[i + 1]);
-			ap.addEdge(item_elem[i], item_elem[i + 1]);
+			ap.addEdge(item_elem[(i + 1) * objbyte - 1], placeholder_elem[(i + 1) * objbyte]);
+			ap.addEdge(item_elem[(i + 1) * objbyte - 1], item_elem[(i + 1) * objbyte]);
 		}
 	}
 
@@ -201,9 +223,9 @@ void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_
 	***************************/
 	stringstream namess;
 	string name;
-	namess << "SPM_" << (objbyte * 8) << "B_" << item_num << "X" << entry_num;
+	namess << "SPM_" << (objbyte * 8) << "B_" << (item_num + 1) << "X" << entry_num;
 
-	if (optimized) namess << "_O";
+	if (!optimized) namess << "_NO";
 	if (is_fsm)
 		namess << "_fsm";
 	else

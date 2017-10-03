@@ -1,0 +1,55 @@
+<anml version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<automata-network id="vasim">
+<counter id="Counter"  target="1000">
+	<activate-on-target element="Reporter"/>
+</counter>
+<state-transition-element id="Reporter"  symbol-set="[\xFF]"  start="none">
+	<report-on-match/>
+</state-transition-element>
+<state-transition-element id="e0"  symbol-set="[\xFF]"  start="start-of-data">
+	<activate-on-match element="p0"/>
+	<activate-on-match element="i0"/>
+</state-transition-element>
+<state-transition-element id="e1"  symbol-set="[\xFF]"  start="start-of-data">
+	<activate-on-match element="p1"/>
+	<activate-on-match element="i1"/>
+</state-transition-element>
+<state-transition-element id="e2"  symbol-set="[\xFF]"  start="start-of-data">
+	<activate-on-match element="p2"/>
+	<activate-on-match element="i2"/>
+</state-transition-element>
+<state-transition-element id="i0"  symbol-set="[\x0A]"  start="none">
+	<activate-on-match element="p1"/>
+	<activate-on-match element="i1"/>
+</state-transition-element>
+<state-transition-element id="i1"  symbol-set="[\x0A]"  start="none">
+	<activate-on-match element="p2"/>
+	<activate-on-match element="i2"/>
+</state-transition-element>
+<state-transition-element id="i2"  symbol-set="[\x0A]"  start="none">
+	<activate-on-match element="last_p"/>
+	<activate-on-match element="last_i"/>
+</state-transition-element>
+<state-transition-element id="last_i"  symbol-set="[\xFE]"  start="none">
+	<activate-on-match element="Counter"/>
+</state-transition-element>
+<state-transition-element id="last_p"  symbol-set="[\x00-\xFD]"  start="none">
+	<activate-on-match element="last_i"/>
+</state-transition-element>
+<state-transition-element id="p0"  symbol-set="[\x00-\xFD]"  start="none">
+	<activate-on-match element="e0"/>
+	<activate-on-match element="p0"/>
+	<activate-on-match element="i0"/>
+</state-transition-element>
+<state-transition-element id="p1"  symbol-set="[\x00-\xFD]"  start="none">
+	<activate-on-match element="e1"/>
+	<activate-on-match element="p1"/>
+	<activate-on-match element="i1"/>
+</state-transition-element>
+<state-transition-element id="p2"  symbol-set="[\x00-\xFD]"  start="none">
+	<activate-on-match element="e2"/>
+	<activate-on-match element="p2"/>
+	<activate-on-match element="i2"/>
+</state-transition-element>
+</automata-network>
+</anml>
