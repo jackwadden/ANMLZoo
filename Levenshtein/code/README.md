@@ -3,7 +3,7 @@
 The Levenshtein Automaton ANML Creation Program, *leven*, is a C++ progam that can generate Levenshtein automata giving a pattern string, *p*, and Levenshtein edit distance, *d*. The leven program is dependent on <a href="https://github.com/jackwadden/VASim">VASim</a> by Jack Wadden from University of Virginia. You will need to download VASim and place it in one folder up when compiling **main.cpp** (or edit the make file). 
 
 The *leven* executable creates a customized ANML file, named *leven_[input info].anml*, and a MNRL file, named *leven_[input info].mnrl*,containing Levenshtein automata based on the command-line parameters in this format:  
-`leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations>`
+`leven <MODE> <string/file name/rand width> <edit dist> <random type> <random iterations> [--reduce]`
 
 ## Usage Parameter Descriptions
 
@@ -33,6 +33,9 @@ This parameter specifies which random type to use - either '`DNA`' or '`alphanum
 
 ### \<random iterations>
 This parameter specifies how many iterations of Levenshtein automata the resulting ANML file will contain. **Only applies to Random mode**
+
+### --reduce
+If the program sees the --reduce flag in the input arguments, it will emit a levenshtein automata that only reports whether or not an input string is exactly the edit distance away from the encoded string. Levenshtein automata tend to generate lots of redundant matches for strings that are highly similar. This methodology is meant to reduce state requirements in the case that the minimum edit distance for a matching string is not required.
 
 ---
 
@@ -150,6 +153,13 @@ This will make five random Levenshtein automata, each five alpha-numeric chars l
 <img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/rand%20alphanum%20test%20edit.png" width="605" height="175" alt="rand_alphanum">  
 </p>
 
+### --reduce Option
+
+**DNA Example**:  
+```
+leven r 5 2 DNA 5 --reduce
+```
+This will generate an automata that will only report strings when it encounters strings with exactly an edit distance of two away from the encoded string.
 
 ### Output ANML and MNRL file names
 After the program concludes, an ANML and MNRL files will be generated in the same folder as the **leven** executable is run from. The name of the ANML and MNRL file will begin with "*leven_*" then contain info based on the string/file name/random type and edit distance (in addition to the width and iterations for the random mode), and end with the "*.anml*" or "*.mnrl*" file extensions. 
