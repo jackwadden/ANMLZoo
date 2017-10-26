@@ -1,4 +1,5 @@
 #pragma once
+#include "automata.h"
 
 typedef basic_string<int> intstring;
 
@@ -9,8 +10,10 @@ private:
     int byte_to_use;
 public:
     ItemSet(istream &);
+    int objbyte();
+    vector<intstring> getfirstseq();
     void print();
 };
 
-void SPMbuild(ItemSet &);
-void SPMbuild(int, int, int, bool, bool, bool);
+void SPMbuild(Automata &, ItemSet &, bool, bool, bool);
+void SPMbuild(Automata &, int, int, int, bool, bool, bool);

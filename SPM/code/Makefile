@@ -7,6 +7,8 @@ PUGI=$(VASIM)/libs/pugixml/src
 LIBVASIM=$(VASIM)/libvasim.a
 IDIRS=-I $(VASIM)/include -I $(MNRL)/include -I $(PUGI) -I ./include
 CCFILES=$(shell find ./src -name "*.cpp")
+ATR=../../../ATR
+VPR=../../../vtr_dev/vpr
 
 all:
 	$(CC) $(IDIRS) $(FLAGS) $(CCFILES) $(LIBVASIM) $(LIBMNRL)  -o spm
@@ -18,6 +20,12 @@ test:
 	./spm r 4 4 2 --NO
 	./spm r 4 4 2 --NC
 	./spm r 4 4 2
+
+blif:
+	$(VASIM)/vasim -Ox --enforce-fanin 8 --blif SPM_16B_5X4_spm_C.anml
+
+vpr:
+	$(VPR)/vpr $(ATR)/archs/d480.xml $(ATR)/blifs/spm_opt_3.orgate.blif --allow_unrelated_clustering off --timing_analysis off
 
 clean:
 	@rm -f spm

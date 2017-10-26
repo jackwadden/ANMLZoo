@@ -30,16 +30,19 @@ int main(int argc, char *argv[])
 
 		/**********************************************************
 		string input from command line (need to be enclosed by *" "*)
+		s n {input_string} {entry} [-O] [--fsm] [--NC]
 		**********************************************************/
 		if (mode == 's') {
 			stringstream ss(stringfileiter);
 			ItemSet itemset(ss);
-			itemset.print();
+
 			/* SPM build */
-			SPMbuild(itemset);
+			Automata ap;
+			//SPMbuild(ap, itemset);
 		}
 		/**********************************************************
 		file input
+		f n {filename} [-O] [--fsm] [--NC]
 		**********************************************************/
 		else if (mode == 'f') {
 			ifstream pfile(stringfileiter);
@@ -49,14 +52,45 @@ int main(int argc, char *argv[])
 			}
 
 			ItemSet itemset(pfile);
-			itemset.print();
 			pfile.close();
+
 			/* SPM build */
-			SPMbuild(itemset);
+			bool optimized = true, is_fsm = false, NC = false;
+
+			for (int i = 4; i < argc; i++) {
+				string optionalarg = argv[i];
+				if (optionalarg == "--NO") optimized = false;
+				else if (optionalarg == "--fsm") is_fsm = true;
+				else if (optionalarg == "--NC") NC = true;
+				else {
+					cout << "  ERROR: Invalid argument " << i << "!" << endl;
+					exit(EXIT_FAILURE);
+				}
+			}
+
+			Automata ap;
+			SPMbuild(ap, itemset, optimized, is_fsm, NC);
+
+			stringstream namess;
+			string name;
+			namess << "SPMfile";
+
+			if (!optimized) namess << "_NO";
+			if (is_fsm)
+				namess << "_fsm";
+			else
+				namess << "_spm";
+			if (!NC)
+				namess << "_C";
+			else
+				namess << "_NC";
+			name = namess.str();
+			ap.automataToANMLFile(name + ".anml");
+		    	cout <<"\n  ANML file created = `" << (name + ".anml") << "'"<< endl;
 		}
 		/**********************************************************
 		random generator
-		r itemsize entry objbyte [-O] [--fsm] [--NC]
+		r {itemsize} {entry} {objbyte} [-O] [--fsm] [--NC]
 		**********************************************************/
 		else {
 			int item_num = atoi(argv[2]);
@@ -84,7 +118,25 @@ int main(int argc, char *argv[])
 					exit(EXIT_FAILURE);
 				}
 			}
-			SPMbuild(item_num, entry_num, objbyte, optimized, is_fsm, NC);
+			Automata ap;
+			SPMbuild(ap, item_num, entry_num, objbyte, optimized, is_fsm, NC);
+
+			stringstream namess;
+			string name;
+			namess << "SPM_" << (objbyte * 8) << "B_" << (item_num + 1) << "X" << entry_num;
+
+			if (!optimized) namess << "_NO";
+			if (is_fsm)
+				namess << "_fsm";
+			else
+				namess << "_spm";
+			if (!NC)
+				namess << "_C";
+			else
+				namess << "_NC";
+			name = namess.str();
+			ap.automataToANMLFile(name + ".anml");
+		    	cout <<"\n  ANML file created = `" << (name + ".anml") << "'"<< endl;
 		}
 
 
@@ -99,17 +151,149 @@ int main(int argc, char *argv[])
 /***************************
 SPM build function
 Parameter:
-	argv - file name
+	ap - input ap
+	itemset - build SPM according to this
+	optimized - apply optimization to save one STE in each entry if set
+	is_fsm - generate automata for frequent set mining if set, for sequential pattern mining otherwise.
+	NC - no counter STE if set
 ***************************/
-void SPMbuild(ItemSet &itemset)
+void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool NC)
 {
+	/***************************
+	element creation and addition to network, parameters are set
+	***************************/
+
+	string STE_name;
+	STE *STE_temp;
+
+	int objbyte = itemset.objbyte();
+	vector<intstring> seqence = itemset.getfirstseq();
+
+	STE *entry_elem;
+	vector<STE *> placeholder_elem;
+	vector<STE *> item_elem;
+	vector<STE *> delimplaceholder_elem;
+	vector<STE *> delim_elem;
+
+	// entry element
+	if (optimized) {
+		entry_elem = new STE("entry", "[\\xFF]", "start-of-data");
+	}
+	else {
+		entry_elem = new STE("entry", "[\\xFF]", "all-input");
+	}
+	ap.rawAddSTE(entry_elem);
+
+	int itemcnt = 0;
+	for (auto i = sequence.begin(); i != sequence.end(); i++) {
+		for (auto j = i->begin(); j != i->end(); j++) {
+			// placeholder
+			for (int k = 0; k < objbyte; k++) {
+				STE_name = "p" + to_string(itemcnt) + "_" + to_string(k);
+				STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
+				placeholder_elem.push_back(STE_temp);
+			}
+
+			// item
+			vector<string> steval = STEval(*j);
+			for (int k = 0; k < objbyte; k++) {
+				STE_name = "i" + to_string(itemcnt) + "_" + to_string(k);
+				STE_temp = new STE(STE_name, steval[k], "none");
+				item_elem.push_back(STE_temp);
+			}
+
+			itemcnt++;
+		}
+		// delimiter placeholder
+		for (int k = 0; k < objbyte; k++) {
+			STE_name = "p" + to_string(itemcnt) + "_" + to_string(k);
+			STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
+			placeholder_elem.push_back(STE_temp);
+		}
+		// delimiter
+	}
+
+	// last placeholder & item elements
+	STE *last_p, *last_i;
+	last_p = new STE("last_p", "[\\x00-\\xFD]", "none");
+	last_i = new STE("last_i", "[\\xFE]", "none");
+	if (NC)
+		last_i->setReporting(true);
+
+	ap.rawAddSTE(last_p);
+	ap.rawAddSTE(last_i);
+
+
+	/***************************
+	element connections
+	***************************/
+
+	//  create/connect reporter and counter
+	if (!NC) {
+		Counter *CNT_temp;
+		STE *REP_temp;
+		CNT_temp = new Counter("Counter", 1000, "pulse");
+		REP_temp = new STE("Reporter", "[\\xFF]", "none");
+		REP_temp->setReporting(true);
+		ap.rawAddSpecialElement(CNT_temp);
+		ap.rawAddSTE(REP_temp);
+
+		ap.addEdge(last_i, CNT_temp);
+		ap.addEdge(CNT_temp, REP_temp);
+	}
+
+	// last item
+	ap.addEdge(item_elem[item_num * objbyte - 1], last_p);
+	ap.addEdge(item_elem[item_num * objbyte - 1], last_i);
+	ap.addEdge(last_p, last_i);
+
+	// Entry->placeholder->item
+	for (int i = 0; i < entry_num; i++) {
+		ap.addEdge(entry_elem[i], placeholder_elem[i * objbyte]);
+		ap.addEdge(entry_elem[i], item_elem[i * objbyte]);
+		if (optimized)
+			ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], entry_elem[i]);
+	}
+
+	// placeholder->placeholder; placeholder->item; item->next_item; item->next_placeholder
+	for (int i = 0; i < item_num; i++) {
+		// P[i][0] -> P[i][1] -> ... -> P[i][objbyte - 1] -> P[i][0]
+		for (int j = 0; j < objbyte; j++) {
+			ap.addEdge(
+				placeholder_elem[i * objbyte + j % objbyte],
+				placeholder_elem[i * objbyte + (j + 1) % objbyte]);
+		}
+
+		// P[i][objbyte - 1] -> I[i][0]
+		ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], item_elem[i * objbyte]);
+
+		// I[i][0] -> I[i][1] -> ... -> I[i][objbyte - 1]
+		for (int j = 0; j < objbyte - 1; j++) {
+			ap.addEdge(item_elem[i * objbyte + j], item_elem[i * objbyte + (j + 1)]);
+		}
+
+		// I[i][objbyte - 1] -> P[i + 1][0], I[i][objbyte - 1] -> I[i + 1][0]
+		if (i < item_num - 1) {
+			ap.addEdge(item_elem[(i + 1) * objbyte - 1], placeholder_elem[(i + 1) * objbyte]);
+			ap.addEdge(item_elem[(i + 1) * objbyte - 1], item_elem[(i + 1) * objbyte]);
+		}
+	}
 
 }
 
-void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_fsm, bool NC)
+/***************************
+Random SPM build function, add an automaton to *ap*
+Parameter:
+	ap - input ap
+	item_num - number of items
+	entry_num - number of entry STEs
+	objbyte - length of item No.
+	optimized - apply optimization to save one STE in each entry if set
+	is_fsm - generate automata for frequent set mining if set, for sequential pattern mining otherwise.
+	NC - no counter STE if set
+***************************/
+void SPMbuild(Automata &ap, int item_num, int entry_num, int objbyte, bool optimized, bool is_fsm, bool NC)
 {
-
-	Automata ap;
 	/***************************
 	element creation and addition to network, parameters are set
 	***************************/
@@ -182,8 +366,8 @@ void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_
 	}
 
 	// last item
-	ap.addEdge(item_elem[item_num - 1], last_p);
-	ap.addEdge(item_elem[item_num - 1], last_i);
+	ap.addEdge(item_elem[item_num * objbyte - 1], last_p);
+	ap.addEdge(item_elem[item_num * objbyte - 1], last_i);
 	ap.addEdge(last_p, last_i);
 
 	// Entry->placeholder->item
@@ -218,27 +402,21 @@ void SPMbuild(int item_num, int entry_num, int objbyte, bool optimized, bool is_
 		}
 	}
 
-	/***************************
-	network output to file (ANML & MNRL)
-	***************************/
-	stringstream namess;
-	string name;
-	namess << "SPM_" << (objbyte * 8) << "B_" << (item_num + 1) << "X" << entry_num;
+}
 
-	if (!optimized) namess << "_NO";
-	if (is_fsm)
-		namess << "_fsm";
-	else
-		namess << "_spm";
-	if (!NC)
-		namess << "_C";
-	else
-		namess << "_NC";
-	name = namess.str();
-	ap.automataToANMLFile(name + ".anml");
-    	cout <<"\n  ANML file created = `" << (name + ".anml") << "'"<< endl;
-	ap.automataToMNRLFile(name + ".mnrl");
-    	cout <<"\n  MNRL file created = `" << (name + ".mnrl") << "'"<< endl;
+vector<string> STEval(int num)
+{
+	vector<string> result;
+	string str;
+	while (num > 0) {
+		val = num % 253;
+		num /= 253;
+		stringstream ss;
+		ss << hex << uppercase << val;
+		result.push_back("[\\x" + ss.str() + "]");
+	}
+
+	return result;
 }
 
 /***************************

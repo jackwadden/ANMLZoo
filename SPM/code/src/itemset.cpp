@@ -68,6 +68,16 @@ ItemSet::ItemSet(istream &is)
 	}
 }
 
+int ItemSet::objbyte()
+{
+	return byte_to_use;
+}
+
+vector<intstring> ItemSet::getfirstseq()
+{
+	return content[0];
+}
+
 void ItemSet::print()
 {
 	for (int i = 0; i < (int)content.size(); i++) {

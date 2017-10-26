@@ -1,0 +1,23 @@
+filename
+
+VPR FPGA Placement and Routing.
+Version: 8.0.0-dev+6e709d2
+Revision: 6e709d2
+Compiled: 2017-05-08T15:07:24
+Compiler: GNU 5.4.0 on Linux-4.4.0-72-generic x86_64
+University of Toronto
+vtr-users@googlegroups.com
+This is free open source code under MIT license.
+
+VPR was run with the following command-line:
+../../../vtr_dev/vpr/vpr ../../../ATR/archs/d480.xml ../../../ATR/blifs/spm_opt_3.orgate.blif --allow_unrelated_clustering off --timing_analysis off
+
+
+Architecture file: ../../../ATR/archs/d480.xml
+Circuit name: ../../../ATR/blifs/spm_opt_3.orgate.blif
+
+Warning 1: Model 'or_gate' input port 'enable' has no timing specification (no clock specified to create a sequential input port, not combinationally connected to any outputs, not a clock input)
+Warning 2: Model 'or_gate' output port 'active' has no timing specification (no clock specified to create a sequential output port, not combinationally connected to any inputs, not a clock output)
+Warning 3: Model 'ste' input port 'enable' has no timing specification (no clock specified to create a sequential input port, not combinationally connected to any outputs, not a clock input)
+Warning 4: Model 'ste' output port 'active' has no timing specification (no clock specified to create a sequential output port, not combinationally connected to any inputs, not a clock output)
+Error 1: ../../../ATR/archs/d480.xml:32 Expected 'auto' attribute on node 'layout'
