@@ -13,4 +13,6 @@
 
 using namespace std;
 
+vector<string> STEval(int, int);
+
 void usage(char *); // Usage info funct

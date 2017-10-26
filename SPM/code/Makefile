@@ -8,7 +8,7 @@ LIBVASIM=$(VASIM)/libvasim.a
 IDIRS=-I $(VASIM)/include -I $(MNRL)/include -I $(PUGI) -I ./include
 CCFILES=$(shell find ./src -name "*.cpp")
 ATR=../../../ATR
-VPR=../../../vtr_dev/vpr
+VPR=../../../VTR/vpr
 
 all:
 	$(CC) $(IDIRS) $(FLAGS) $(CCFILES) $(LIBVASIM) $(LIBMNRL)  -o spm
@@ -16,18 +16,25 @@ all:
 log:
 	$(CC) $(IDIRS) $(FLAGS) $(CCFILES) $(LIBVASIM) $(LIBMNRL) > log.txt 2>&1
 
-test:
-	./spm r 4 4 2 --NO
-	./spm r 4 4 2 --NC
-	./spm r 4 4 2
+test: all
+	./spm f n test.txt
 
 blif:
 	$(VASIM)/vasim -Ox --enforce-fanin 8 --blif SPM_16B_5X4_spm_C.anml
 
 vpr:
-	$(VPR)/vpr $(ATR)/archs/d480.xml $(ATR)/blifs/spm_opt_3.orgate.blif --allow_unrelated_clustering off --timing_analysis off
+	$(VPR)/vpr $(ATR)/archs/d480.xml automata_0.blif \
+	--allow_unrelated_clustering off \
+	--sweep_dangling_blocks off \
+	--timing_tradeoff 0 \
+	--beta_clustering 0 \
+	--cluster_seed_type max_inputs \
+	--alpha_clustering 0 \
+	--timing_analysis off \
+	--disp on
 
 clean:
 	@rm -f spm
-	@rm -f *.mnrl
-	@rm -f *.anml
+	@rm -f *.log
+	@rm -f *.mnrl *.anml
+	@rm -f *.blif *.ps *.net

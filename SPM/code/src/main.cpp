@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
 		/**********************************************************
 		string input from command line (need to be enclosed by *" "*)
-		s n {input_string} {entry} [-O] [--fsm] [--NC]
+		s n {input_string} {entry} [-NO] [--fsm] [--NC]
 		**********************************************************/
 		if (mode == 's') {
 			stringstream ss(stringfileiter);
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 		}
 		/**********************************************************
 		file input
-		f n {filename} [-O] [--fsm] [--NC]
+		f n {filename} [-NO] [--fsm] [--NC]
 		**********************************************************/
 		else if (mode == 'f') {
 			ifstream pfile(stringfileiter);
@@ -167,13 +167,11 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 	STE *STE_temp;
 
 	int objbyte = itemset.objbyte();
-	vector<intstring> seqence = itemset.getfirstseq();
+	vector<intstring> sequence = itemset.getfirstseq();
 
 	STE *entry_elem;
 	vector<STE *> placeholder_elem;
 	vector<STE *> item_elem;
-	vector<STE *> delimplaceholder_elem;
-	vector<STE *> delim_elem;
 
 	// entry element
 	if (optimized) {
@@ -186,16 +184,19 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 
 	int itemcnt = 0;
 	for (auto i = sequence.begin(); i != sequence.end(); i++) {
-		for (auto j = i->begin(); j != i->end(); j++) {
+			for (auto j = i->begin(); j != i->end(); j++) {
 			// placeholder
 			for (int k = 0; k < objbyte; k++) {
 				STE_name = "p" + to_string(itemcnt) + "_" + to_string(k);
-				STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
+				if (j == i->begin())
+					STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
+				else
+					STE_temp = new STE(STE_name, "[\\x00-\\xFC]", "none");
 				placeholder_elem.push_back(STE_temp);
 			}
 
 			// item
-			vector<string> steval = STEval(*j);
+			vector<string> steval = STEval(*j, objbyte);
 			for (int k = 0; k < objbyte; k++) {
 				STE_name = "i" + to_string(itemcnt) + "_" + to_string(k);
 				STE_temp = new STE(STE_name, steval[k], "none");
@@ -207,22 +208,30 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		// delimiter placeholder
 		for (int k = 0; k < objbyte; k++) {
 			STE_name = "p" + to_string(itemcnt) + "_" + to_string(k);
-			STE_temp = new STE(STE_name, "[\\x00-\\xFD]", "none");
+			STE_temp = new STE(STE_name, "[\\x00-\\xFC]", "none");
 			placeholder_elem.push_back(STE_temp);
 		}
 		// delimiter
+		for (int k = 0; k < objbyte; k++) {
+			STE_name = "i" + to_string(itemcnt) + "_" + to_string(k);
+			STE_temp = new STE(STE_name, "[\\xFD]", "none");
+			item_elem.push_back(STE_temp);
+		}
+
+		itemcnt++;
 	}
-
-	// last placeholder & item elements
-	STE *last_p, *last_i;
-	last_p = new STE("last_p", "[\\x00-\\xFD]", "none");
-	last_i = new STE("last_i", "[\\xFE]", "none");
+	int STEcnt = itemcnt * objbyte;
+	// change last placeholder & item element to sequence delimiter
+	placeholder_elem[STEcnt - 1]->setSymbolSet("[\\x00-\\xFD]");
+	item_elem[STEcnt - 1]->setSymbolSet("[\\xFE]");
 	if (NC)
-		last_i->setReporting(true);
+		item_elem[STEcnt - 1]->setReporting(true);
 
-	ap.rawAddSTE(last_p);
-	ap.rawAddSTE(last_i);
-
+	// add placeholder and item STE vector to AP
+	for (int i = 0; i < STEcnt; i++)
+		ap.rawAddSTE(placeholder_elem[i]);
+	for (int i = 0; i < STEcnt; i++)
+		ap.rawAddSTE(item_elem[i]);
 
 	/***************************
 	element connections
@@ -238,25 +247,19 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		ap.rawAddSpecialElement(CNT_temp);
 		ap.rawAddSTE(REP_temp);
 
-		ap.addEdge(last_i, CNT_temp);
+		ap.addEdge(item_elem[STEcnt - 1], CNT_temp);
 		ap.addEdge(CNT_temp, REP_temp);
 	}
 
-	// last item
-	ap.addEdge(item_elem[item_num * objbyte - 1], last_p);
-	ap.addEdge(item_elem[item_num * objbyte - 1], last_i);
-	ap.addEdge(last_p, last_i);
 
 	// Entry->placeholder->item
-	for (int i = 0; i < entry_num; i++) {
-		ap.addEdge(entry_elem[i], placeholder_elem[i * objbyte]);
-		ap.addEdge(entry_elem[i], item_elem[i * objbyte]);
-		if (optimized)
-			ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], entry_elem[i]);
-	}
+	ap.addEdge(entry_elem, placeholder_elem[0]);
+	ap.addEdge(entry_elem, item_elem[0]);
+	if (optimized)
+		ap.addEdge(placeholder_elem[objbyte - 1], entry_elem);
 
 	// placeholder->placeholder; placeholder->item; item->next_item; item->next_placeholder
-	for (int i = 0; i < item_num; i++) {
+	for (int i = 0; i < itemcnt; i++) {
 		// P[i][0] -> P[i][1] -> ... -> P[i][objbyte - 1] -> P[i][0]
 		for (int j = 0; j < objbyte; j++) {
 			ap.addEdge(
@@ -273,12 +276,12 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		}
 
 		// I[i][objbyte - 1] -> P[i + 1][0], I[i][objbyte - 1] -> I[i + 1][0]
-		if (i < item_num - 1) {
+		if (i < itemcnt - 1) {
 			ap.addEdge(item_elem[(i + 1) * objbyte - 1], placeholder_elem[(i + 1) * objbyte]);
 			ap.addEdge(item_elem[(i + 1) * objbyte - 1], item_elem[(i + 1) * objbyte]);
 		}
 	}
-
+	cout << "itemcnt" << itemcnt << endl;
 }
 
 /***************************
@@ -404,18 +407,18 @@ void SPMbuild(Automata &ap, int item_num, int entry_num, int objbyte, bool optim
 
 }
 
-vector<string> STEval(int num)
+vector<string> STEval(int num, int objbyte)
 {
 	vector<string> result;
-	string str;
-	while (num > 0) {
+	int val;
+	for (; objbyte > 0; objbyte--) {
 		val = num % 253;
 		num /= 253;
 		stringstream ss;
+		ss << setfill('0') << setw(2);
 		ss << hex << uppercase << val;
 		result.push_back("[\\x" + ss.str() + "]");
 	}
-
 	return result;
 }
 
@@ -426,5 +429,9 @@ Parameter:
 ***************************/
 void usage(char *argv)
 {
-	cout << "Placeholder" << endl;
+	cout << "ANMLZoo SPM generator usage:" << endl;
+	cout << "	f n {filename} [-NO] [--NC]" << endl;
+	cout << "NO - no optimization if set (optimization will save one STE in each entry)" << endl;
+	cout << "NC - no counter STE if set" << endl;
+	cout << "Redundant parameters are placeholders for future functions." << endl;
 }
