@@ -14,7 +14,7 @@ main function of SPM.
 int main(int argc, char *argv[])
 {
 
-	if ((argc == 4 && (*argv[1] == 's' || *argv[1] == 'f') && (*argv[2] == 'n')) ||
+	if ((argc >= 5 && argc <= 8 && (*argv[1] == 's' || *argv[1] == 'f') && (*argv[2] == 'n')) ||
 		(argc >= 5 && argc <= 8 && *argv[1] == 'r')) {
 		Automata ap; // initialize automata
 
@@ -24,17 +24,19 @@ int main(int argc, char *argv[])
 		// 1 format: "norm" accepts string like 3 -1 -2 44 7 -1 5 -1 -2.
 		//char format = *argv[2];
 
-		string stringfileiter = argv[3];
+		string strarg0 = argv[3];
+		string strarg1 = argv[4];
+
 
 		intstring p; // store input pattern from command line
 
 		/**********************************************************
 		string input from command line (need to be enclosed by *" "*)
-		s n {input_string} {entry} [-NO] [--fsm] [--NC]
+		s n {SPString} {DataString} [-NO] [--fsm] [--NC]
 		**********************************************************/
 		if (mode == 's') {
-			stringstream ss(stringfileiter);
-			ItemSet itemset(ss);
+			stringstream ss(strarg0);
+			ItemSet itemset(ss, "ss");
 
 			/* SPM build */
 			Automata ap;
@@ -42,22 +44,27 @@ int main(int argc, char *argv[])
 		}
 		/**********************************************************
 		file input
-		f n {filename} [-NO] [--fsm] [--NC]
+		f n {SPFile} {DataFile} [-NO] [--fsm] [--NC]
 		**********************************************************/
 		else if (mode == 'f') {
-			ifstream pfile(stringfileiter);
-			if (pfile.is_open() == 0) { // Check to see if file is open
+			ifstream pfile(strarg0);
+			ifstream qfile(strarg1);
+			if (pfile.is_open() == 0 || qfile.is_open() == 0) { // Check to see if file is open
 				cout << "  ERROR: Unable to open file! \n\t Please check file name and try again." << endl;
 				exit(EXIT_FAILURE);
 			}
 
-			ItemSet itemset(pfile);
+			ItemSet SPFile(pfile, "SPFile");
+			ItemSet DataFile(qfile, "DataFile");
+			SPFile.objbytealign(DataFile);
 			pfile.close();
+			qfile.close();
+
 
 			/* SPM build */
 			bool optimized = true, is_fsm = false, NC = false;
 
-			for (int i = 4; i < argc; i++) {
+			for (int i = 5; i < argc; i++) {
 				string optionalarg = argv[i];
 				if (optionalarg == "--NO") optimized = false;
 				else if (optionalarg == "--fsm") is_fsm = true;
@@ -69,7 +76,7 @@ int main(int argc, char *argv[])
 			}
 
 			Automata ap;
-			SPMbuild(ap, itemset, optimized, is_fsm, NC);
+			SPMbuild(ap, SPFile, optimized, is_fsm, NC);
 
 			stringstream namess;
 			string name;
@@ -87,6 +94,12 @@ int main(int argc, char *argv[])
 			name = namess.str();
 			ap.automataToANMLFile(name + ".anml");
 		    	cout <<"\n  ANML file created = `" << (name + ".anml") << "'"<< endl;
+				cout <<"  Corresponding data file created = `" << (name +".input") << "'" << endl;
+			
+			/* DataFile convert */
+			ofstream outfile((name + ".input"), fstream::out | fstream::trunc);
+			DataFile.DataFileConvert(outfile);
+			outfile.close();
 		}
 		/**********************************************************
 		random generator
@@ -175,10 +188,10 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 
 	// entry element
 	if (optimized) {
-		entry_elem = new STE("entry", "[\\xFF]", "start-of-data");
+		entry_elem = new STE("entry", "[\\xFE]", "start-of-data");
 	}
 	else {
-		entry_elem = new STE("entry", "[\\xFF]", "all-input");
+		entry_elem = new STE("entry", "[\\xFE]", "all-input");
 	}
 	ap.rawAddSTE(entry_elem);
 
@@ -221,16 +234,21 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		itemcnt++;
 	}
 	int STEcnt = itemcnt * objbyte;
-	// change last placeholder & item element to sequence delimiter
-	placeholder_elem[STEcnt - 1]->setSymbolSet("[\\x00-\\xFD]");
-	item_elem[STEcnt - 1]->setSymbolSet("[\\xFE]");
+	// change last placeholder & item element to sequence delimiter placeholder & sequence delimiter
+	// note that there will be only one STE for last sequence delimiter, so even though we added that
+	// much items for convenience, only one STE will be actually added to AP.
+	for (int k = 1; k <= objbyte; k++) {
+		placeholder_elem[STEcnt - k]->setSymbolSet("[\\x00-\\xFD]");
+	}
+	item_elem[STEcnt - objbyte]->setSymbolSet("[\\xFE]");
+
 	if (NC)
-		item_elem[STEcnt - 1]->setReporting(true);
+		item_elem[STEcnt - objbyte]->setReporting(true);
 
 	// add placeholder and item STE vector to AP
 	for (int i = 0; i < STEcnt; i++)
 		ap.rawAddSTE(placeholder_elem[i]);
-	for (int i = 0; i < STEcnt; i++)
+	for (int i = 0; i < STEcnt - objbyte + 1; i++)
 		ap.rawAddSTE(item_elem[i]);
 
 	/***************************
@@ -247,7 +265,7 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		ap.rawAddSpecialElement(CNT_temp);
 		ap.rawAddSTE(REP_temp);
 
-		ap.addEdge(item_elem[STEcnt - 1], CNT_temp);
+		ap.addEdge(item_elem[STEcnt - objbyte], CNT_temp);
 		ap.addEdge(CNT_temp, REP_temp);
 	}
 
@@ -270,9 +288,11 @@ void SPMbuild(Automata &ap, ItemSet &itemset, bool optimized, bool is_fsm, bool 
 		// P[i][objbyte - 1] -> I[i][0]
 		ap.addEdge(placeholder_elem[i * objbyte + objbyte - 1], item_elem[i * objbyte]);
 
-		// I[i][0] -> I[i][1] -> ... -> I[i][objbyte - 1]
-		for (int j = 0; j < objbyte - 1; j++) {
-			ap.addEdge(item_elem[i * objbyte + j], item_elem[i * objbyte + (j + 1)]);
+		// I[i][0] -> I[i][1] -> ... -> I[i][objbyte - 1] (except for the last one)
+		if (i < itemcnt - 1) {
+			for (int j = 0; j < objbyte - 1; j++) {
+				ap.addEdge(item_elem[i * objbyte + j], item_elem[i * objbyte + (j + 1)]);
+			}
 		}
 
 		// I[i][objbyte - 1] -> P[i + 1][0], I[i][objbyte - 1] -> I[i + 1][0]
@@ -422,6 +442,8 @@ vector<string> STEval(int num, int objbyte)
 	return result;
 }
 
+
+
 /***************************
 Usage info function, pop up on invalid input.
 Parameter:
@@ -429,9 +451,12 @@ Parameter:
 ***************************/
 void usage(char *argv)
 {
-	cout << "ANMLZoo SPM generator usage:" << endl;
-	cout << "	f n {filename} [-NO] [--NC]" << endl;
-	cout << "NO - no optimization if set (optimization will save one STE in each entry)" << endl;
-	cout << "NC - no counter STE if set" << endl;
-	cout << "Redundant parameters are placeholders for future functions." << endl;
+	cout << endl;
+	cout << "  ANMLZoo SPM generator usage:" << endl;
+	cout << "    f n {SPFile} {DataFile} [-NO] [--NC]" << endl;
+	cout << "  SPFile - This file shall contain the sequential pattern user would like to mine in Datafile." << endl;
+	cout << "  DataFile - This file shall contain the data to be mined in, and is converted to a form which AP generated by this program is able to mine." << endl;
+	cout << "  --NO - no optimization if set (optimization will save one STE in each entry)" << endl;
+	cout << "  --NC - no counter STE if set" << endl;
+	cout << "  Redundant parameters are placeholders for future functions." << endl;
 }

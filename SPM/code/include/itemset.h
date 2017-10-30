@@ -9,8 +9,10 @@ private:
     vector<vector<intstring>> content;
     int byte_to_use;
 public:
-    ItemSet(istream &);
-    int objbyte();
+    ItemSet(istream &, string);
+	int objbyte();
+	void objbytealign(ItemSet &);
+	void DataFileConvert(ofstream &);
     vector<intstring> getfirstseq();
     void print();
 };

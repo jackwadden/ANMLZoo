@@ -17,10 +17,13 @@ log:
 	$(CC) $(IDIRS) $(FLAGS) $(CCFILES) $(LIBVASIM) $(LIBMNRL) > log.txt 2>&1
 
 test: all
-	./spm f n test.txt
+	./spm f n test.txt data.txt
+	./spm f n test.txt data.txt --NC
+	./spm f n test.txt data.txt --NO --NC
+	cp *.anml *.input ./TEST
 
 blif:
-	$(VASIM)/vasim -Ox --enforce-fanin 8 --blif SPM_16B_5X4_spm_C.anml
+	$(VASIM)/vasim -Ox --enforce-fanin 8 --blif SPMfile_NO_spm_NC.anml
 
 vpr:
 	$(VPR)/vpr $(ATR)/archs/d480.xml automata_0.blif \
@@ -38,3 +41,4 @@ clean:
 	@rm -f *.log
 	@rm -f *.mnrl *.anml
 	@rm -f *.blif *.ps *.net
+	@rm -f *.input

@@ -10,7 +10,7 @@ Return value:
 	string - normalized expression when bool == true
 ***************************/
 
-ItemSet::ItemSet(istream &is)
+ItemSet::ItemSet(istream &is, string streamname)
 {
 	int in;
 	vector<intstring> result;
@@ -25,7 +25,7 @@ ItemSet::ItemSet(istream &is)
 		}
 		else if (in == -1) {
 			if (itemcnt == 0) {
-				cout << "  ERROR: Empty set at sequence number " << seqcnt << "!" << endl;
+				cout << "  ERROR:  in " << streamname << ". Empty set at sequence number " << seqcnt << "!" << endl;
 				exit(EXIT_FAILURE);
 			}
 			itemcnt = 0;
@@ -37,27 +37,27 @@ ItemSet::ItemSet(istream &is)
 			content.push_back(result);
 			result.clear();
 			if (setcnt == 0) {
-				cout << "  ERROR: Empty sequence at sequence number " << seqcnt << "!" << endl;
+				cout << "  ERROR:  in " << streamname << ". Empty sequence at sequence number " << seqcnt << "!" << endl;
 				exit(EXIT_FAILURE);
 			}
 			seqcnt++;
 			result.push_back(intstring());
 		}
 		else {
-			cout << "  ERROR: Invalid integer at sequence number " << seqcnt << "!" << endl;
+			cout << "  ERROR:  in " << streamname << ". Invalid integer at sequence number " << seqcnt << "!" << endl;
 			exit(EXIT_FAILURE);
 		}
 	}
 	if (in != -2) {
-		cout << "  ERROR: Invalid input file ending!" << endl;
+		cout << "  ERROR:  in " << streamname << ". Invalid input file ending!" << endl;
 		exit(EXIT_FAILURE);
 	}
 	if (is.bad()) {
-		cout << "  ERROR: Corrupted input file!" << endl;
+		cout << "  ERROR:  in " << streamname << ". Corrupted input file!" << endl;
 		exit(EXIT_FAILURE);
 	}
 	if (maxno >= 64009) {
-		cout << "  ERROR: Item No. exceeds maximum!" << endl;
+		cout << "  ERROR:  in " << streamname << ". Item No. exceeds maximum!" << endl;
 		exit(EXIT_FAILURE);
 	}
 	else if (maxno >= 253) {
@@ -71,6 +71,39 @@ ItemSet::ItemSet(istream &is)
 int ItemSet::objbyte()
 {
 	return byte_to_use;
+}
+
+
+void ItemSet::objbytealign(ItemSet &itemset)
+{
+	if (itemset.byte_to_use > byte_to_use)
+		byte_to_use = itemset.byte_to_use;
+	else
+		itemset.byte_to_use = byte_to_use;
+}
+
+void ItemSet::DataFileConvert(ofstream &datafile)
+{
+	unsigned char val;
+	val = 254;
+	datafile << val;
+	for (auto i = content.begin(); i != content.end(); i++) {
+		for(auto j = i->begin(); j != i->end(); j++) {
+			for (auto k = j->begin(); k != j->end(); k++) {
+				int num = *k;
+				for (int l = 0; l < byte_to_use; l++) {
+					val = num % 253;
+					num /= 253;
+					datafile << val;
+				}
+			}
+			val = 253;
+			for (int l = 0; l < byte_to_use; l++)
+				datafile << val;
+		}
+		val = 254;
+		datafile << val;
+	}
 }
 
 vector<intstring> ItemSet::getfirstseq()
