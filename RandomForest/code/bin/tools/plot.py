@@ -7,8 +7,8 @@
     email: tjt7a@virginia.edu
     University of Virginia
     ----------------------
-    12 June 2017
-    Version 0.2
+    15 January 2018
+    Version 0.3
 '''
 
 # Utility Imports
@@ -18,17 +18,9 @@ import matplotlib.pyplot as plt
 # Plot the number of thresholds across features
 def plot_thresholds(threshold_map):
 
-    # The features are the keys of the threshold_map
-    features = threshold_map.keys()
-
-    # The values are a list of unique thresholdsccs
-    threshold_counts = [len(thresholds) for f,
+    # Feature, unique threshold pairs
+    threshold_counts = [(f, len(thresholds)) for f,
                         thresholds in threshold_map.iteritems()]
-
-    assert len(features) == len(threshold_counts)
-
-    # Zip the two together, so we can sort them
-    threshold_counts = zip(features, threshold_counts)
 
     # Sort tuples of (feature, threshold_count) by threshold_count
     threshold_counts.sort(key=lambda x: x[1])
@@ -44,7 +36,7 @@ def plot_thresholds(threshold_map):
 
     # Plot threshold counts
     plt.bar(range(len(features)), thresholds)
-    plt.xlabel('Feature (sorted by threshold count)')
+    plt.xlabel('Feature (Sorted by Threshold Count)')
     plt.ylabel('Count of Unique Thresholds Per Feature')
     plt.ylim([0, thresholds[-1]])
     plt.xlim([0, len(features)])

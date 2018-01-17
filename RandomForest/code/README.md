@@ -1,49 +1,39 @@
 # Automatize - Random Forest Automata Generator
 
-The Random Forest automata generator, **automatize.py**, is an Object-Oriented style Python script which will generate an ANML file compatible with the Micron Automata Processor(AP).
+The Random Forest automata generator, **bin/automatize.py**, is an Object-Oriented style Python script that will generate an ANML file compatible with the Micron Automata Processor(AP).
 
 For program dependancies see main <a href="https://github.com/jeffudall/ANMLZooCopy/blob/master/RandomForest/README.md">RandomForest README</a>.
 
 ## Inputs
-The **automatize.py** script will create an ANML file when given a model pickle file, *m*. We have provided the <a href="https://github.com/jeffudall/ANMLZooCopy/raw/master/RandomForest/code/models/randomforest/model.pickle">model.pickle</a> example file in the models folder. 
+
+The **bin/automatize.py** script will create an ANML file when given a model pickle file.
 
 The command line parameters are in this format:  
-`automatize.py -m <model file> - a <output ANML name> [OPTIONS]`
-
+`automatize.py <model pickle file> [OPTIONS]`
 
 ## Usage Parameter Descriptions
 
-### -m \<model file>
-This parameter specifies the name of the the Scikit Learn model use by **automatize.py** to create the ANML file. 
-
-### - a \<output ANML name>
-This parameter specifies name of the output ANML file (default: **model.anml**).
-
 ### [OPTIONS]
 You can also specifiy these optional parameters:
-- **`-v`**: Print verbose descriptions of each step in program's progress.
-- **`--short`**: Make a short version of the input file to the AP (default: false)
+- **`-a <name of output ANML file>`**: Name of output ANML file (default: model.anml)
+- **`--short`**: Make an input file with the first 100 inputs for testing (default: false)
 - **`--longer`**: Make a 1000x larger input file to the AP (default: false)
-- **`--unrolled`**: Skip compressing the chains into loops. This generates one STE per feature per chains. (This will create a very big output file.)
+- **`--unrolled`**: Skip compressing the chains into loops. This generates one STE per feature per chains. (This will create a very big output file.) (default: false)
+- **`-p`**: Generate a plot of the threshold count distribution of the features (default: false)
+- **`-v`**: Print verbose descriptions of each step in program's progress. (default: false)
+- **`--circuit`**: Generate circuit-compatible chains and output files (default: false) **EXPERIMENTAL**
+- **`--gpu`**: Generate GPU-compatible chains and output files (default: false) **EXPERIMENTAL**
 
 
 ## Example
 ```
-$ automatize.py -m model.pickle -a mymodel.anml --short -v
+$ bin/automatize.py model.pickle -a mymodel.anml --short -v
 ```
-This will use a short version of the model.pickle file to make an ANML file named *mymodel.anml*.
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%201a.png" width="1086" height="315" alt="">  
-</p>
-<p align="center">
-<img src="https://raw.githubusercontent.com/jeffudall/ANMLZooCopy/master/RandomForest/images/test%20run%202.png" width="1087" height="555" alt="">  
-</p>
 
 ## Outputs
 The **automatize.py** script creates the follwing files:  
 - **model.anml**: This is the ANML-formatted automata file
-- **input_file.bin**: A transformed input file for testing. It was generated from the testing_data.pickle file.
+- **input_file.bin**: A transformed input file for testing (in this case short). It was generated from the testing_data.pickle file.
 
 The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a href="https://github.com/dankramp/AutomataLab">AutomataLab</a> viewer from the University of Virginia.
 
@@ -79,25 +69,27 @@ In the below example using MNIST canned data (see **Input File Generator - train
 
 ---
 
-
-# Input File Generator - trainEnsemble.py 
+# Input File Generator - bin/trainEnsemble.py 
 
 ## Inputs
-The Random Forest decision tree ensemble data training script, **trainEnsemble.py**, will train a Random Forest decision tree ensemble model when given a canned dataset, *c*, a model type, *m*, a depth of decision trees, *d*, and a number of trees, *n*.
+The decision tree ensemble data training script, **trainEnsemble.py**, will train a decision tree ensemble model when given a canned dataset, *c*, OR training and testing data (*t*, *x*), a model type, *m*, a depth of decision trees, *d* OR number of leaf nodes per tree, *l*, and a number of trees, *n*.
 
-The command line parameters are in this format:  
+The command line parameters are in this format:
+
 `trainEnsemble.py -c <canned dataset> -m <model type> -d <depth of decision trees> -n <number of trees in ensemble>`
 
 ## Usage Parameter Descriptions
 
 ### -c \<canned dataset>
-This parameter specifies the name of the canned dataset used by **trainEnsemble.py** to create the Random Forest. 
+This parameter specifies the name of the canned dataset used by **trainEnsemble.py** from SKLEARN. 
 
 MNIST, a canned dataset included in SciKit LEARN, is provided as an example.
 
 ### -m \<model type>
 This parameter specifies model type
-- **`rf`** = **Random Forest** - Right now this is the only model type available
+- **`rf`** = **Random Forest**
+- **`brt`** = **Boosted Regression Trees**
+- **`ada`** = **Adaboost Classifier**
 
 ### -d \<depth of decision trees>
 This parameter specifies the maximum depth of the decision tree learners. 
@@ -108,15 +100,19 @@ This parameter specifies the number of decision trees in the ensemble.
 ### [OPTIONS]
 You can also specifiy these optional parameters:
 - **`-l <number of leaves>`**: Instead of depth you can specify number of leaves for decision trees.  
-- **`-n <number of jobs>`**: You can specify the number ofjobs to run in parallel for fit/predict  
+- **`-j <number of jobs>`**: You can specify the number of jobs to run in parallel for fit/predict.
 - **`-t <training npz file name>`**: Name of training data .npz file.   
-- **`-x <testing data npz file name>`**: Name of testing data .npz file.  
-- **`-v`**: Print verbose descriptions of each step in program's progress.  
-- **`--report`**: You can specify the name of the report (default is *"report.txt"*)  
-- **`--metric`**: Choose the success metric type  
+- **`-x <testing data npz file name>`**: Name of testing data .npz file. 
+- **`-f <number of features>`**: The number of features to use for training. 
+- **`--report`**: You can specify the name of the report file that contains infromation about the trained model. (default is *"report.txt"*)
+- **`--metric`**: Choose the metric used for evaluation.  
     - **`acc`**: Accuracy score (default)  
     - `f1` : F1 score   
-    - `mse`: Mean Squared Error   
+    - `mse`: Mean Squared Error  
+- **`--feature_importance`**: Dump the feature importance values of the trained ensemble. 
+- **`-p <Name of predictions file>`**: Name of the file containing model predictions for testing (default: predictions.txt)
+- **`-v`**: Print verbose descriptions of each step in program's progress (default: false) 
+
 
 ## Example
 ```
@@ -130,9 +126,9 @@ This will make an Random Forest using the MNIST canned dataset with a maximum de
 
 ## Outputs
 The **trainEnsemble.py** script creates the follwing files:  
-**model.pickle**: a serialized Scikit Learn Random Forest model  
-**report.txt**: a file that contains the parameters used for training the model  
-**testing_data.pickle**: a serialized file containing the training data for testing the model
+- **model.pickle**: a serialized Scikit Learn decision tree ensemble model  
+- **report.txt**: a file that contains the parameters used for training the model  
+- **testing_data.pickle**: a serialized file containing the testing data
 
 ---
 
@@ -141,15 +137,43 @@ If you do not need customized inputs, the *inputs* folder contains a number of s
 
 ---
 
+# Majority Voter - bin/classify.py 
+
+## Inputs
+The Random Forest classify script, **classify.py**, reads a reports file generated by VASIM, and generates a file containing the resulting classifications.
+
+The command line parameters are in this format:
+
+`classify.py reports_0tid_0packet.txt`
+
+## Usage Parameter Descriptions
+
+### reports file
+This file is generated by VASIM with the **-r** flag, and contains one line per report.
+
+
+### [OPTIONS]
+You can also specifiy these optional parameters:
+- **`-o <classification output filename>`**: You can specify the classification filename. (default: classifications.txt) 
+
+
+## Outputs
+The resulting output file contains one line per classification in the following format:
+
+*input index:classification*
+
+---
+
 # Optional - Test the CPU throughput of the model
-In order to get an approximation of the performance of the same Random Forest on a standard CPU processor you can use the **test_cpu.py** script to calculate the average throughput of your model on your CPU. Simply run **test_cpu.py** in the same directory as your generated model files
+In order to get an approximation of the performance of the same Random Forest on a standard CPU processor you can use the **bin/test_cpu.py** script to calculate the average throughput of your model on your CPU. Simply run **test_cpu.py** in the same directory as your generated model files
 
 ## Usage Parameters
 All parameters are optional parameters:
-- **`-m <model file>`**: The serialized model file name (defaults to *model.pickle*)
-- **`-t <testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
+
 - **`-n <test iterations>`**: Number of test iterations (defaults to 1000)
 - **`-j <threads>`**: Number of threads used to run the model
+- **`-m <model file>`**: The serialized model file name (defaults to *model.pickle*)
+- **`-t <testing data>`**: The testing data output file name (defaults to *testing_data.pickle*)
 - **`-v`**: Print verbose descriptions of each step in program's progress.
 
 ## Example
@@ -168,3 +192,10 @@ $ test_cpu.py -m <model file> -t <testing data> -n <test iterations> -j <threads
 
 ## Output
 The resulting throughput is a measurment in kilo samples classified per wall-clock second.
+
+# Citing This Code
+
+If you use this code for research purposes, please cite the below paper which introduces the contained algorithms.
+Citation:
+
+Tracy II, Tommy & Fu, Al, et al. "Towards machine learning on the Automata Processor." International Conference on High Performance Computing. Springer International Publishing, 2016.
