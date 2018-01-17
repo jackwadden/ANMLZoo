@@ -17,21 +17,17 @@ You can also specifiy these optional parameters:
 - **`-a <name of output ANML file>`**: Name of output ANML file (default: model.anml)
 - **`--short`**: Make an input file with the first 100 inputs for testing (default: false)
 - **`--longer`**: Make a 1000x larger input file to the AP (default: false)
-- **`--unrolled`**: Skip compressing the chains into loops. This generates one STE per feature per chains. (This will create a very big output file.)
-- **`-p`**: Generate a plot of the threshold count distribution of the features
-- **`-v`**: Print verbose descriptions of each step in program's progress.
-- **`--circuit`**: Generate circuit-compatible chains and output files **EXPERIMENTAL**
-- **`--gpu`**: Generate GPU-compatible chains and output files **EXPERIMENTAL**
+- **`--unrolled`**: Skip compressing the chains into loops. This generates one STE per feature per chains. (This will create a very big output file.) (default: false)
+- **`-p`**: Generate a plot of the threshold count distribution of the features (default: false)
+- **`-v`**: Print verbose descriptions of each step in program's progress. (default: false)
+- **`--circuit`**: Generate circuit-compatible chains and output files (default: false) **EXPERIMENTAL**
+- **`--gpu`**: Generate GPU-compatible chains and output files (default: false) **EXPERIMENTAL**
 
 
 ## Example
 ```
 $ bin/automatize.py model.pickle -a mymodel.anml --short -v
 ```
-
-<p align="center">
-<img src="" width="" height="" alt="">  
-</p>
 
 ## Outputs
 The **automatize.py** script creates the follwing files:  
@@ -45,7 +41,7 @@ The resulting Levenshtein automata ANML file can be viewed in Dan Kramp's <a hre
 # Input File Generator - bin/trainEnsemble.py 
 
 ## Inputs
-The Random Forest decision tree ensemble data training script, **trainEnsemble.py**, will train a decision tree ensemble model when given a canned dataset, *c*, OR training and testing data (*t*, *x*), a model type, *m*, a depth of decision trees, *d* or number of leaf nodes per tree, *l*, and a number of trees, *n*.
+The decision tree ensemble data training script, **trainEnsemble.py**, will train a decision tree ensemble model when given a canned dataset, *c*, OR training and testing data (*t*, *x*), a model type, *m*, a depth of decision trees, *d* OR number of leaf nodes per tree, *l*, and a number of trees, *n*.
 
 The command line parameters are in this format:
 
@@ -73,18 +69,18 @@ This parameter specifies the number of decision trees in the ensemble.
 ### [OPTIONS]
 You can also specifiy these optional parameters:
 - **`-l <number of leaves>`**: Instead of depth you can specify number of leaves for decision trees.  
-- **`-j <number of jobs>`**: You can specify the number of jobs to run in parallel for fit/predict  
+- **`-j <number of jobs>`**: You can specify the number of jobs to run in parallel for fit/predict.
 - **`-t <training npz file name>`**: Name of training data .npz file.   
 - **`-x <testing data npz file name>`**: Name of testing data .npz file. 
 - **`-f <number of features>`**: The number of features to use for training. 
-- **`--report`**: You can specify the name of the report (default is *"report.txt"*)
-- **`--metric`**: Choose the success metric type  
+- **`--report`**: You can specify the name of the report file that contains infromation about the trained model. (default is *"report.txt"*)
+- **`--metric`**: Choose the metric used for evaluation.  
     - **`acc`**: Accuracy score (default)  
     - `f1` : F1 score   
     - `mse`: Mean Squared Error  
 - **`--feature_importance`**: Dump the feature importance values of the trained ensemble. 
-- **`-p <Name of predictions file>`**: Name of the file containing model predictions for testing.
-- **`-v`**: Print verbose descriptions of each step in program's progress.  
+- **`-p <Name of predictions file>`**: Name of the file containing model predictions for testing (default: predictions.txt)
+- **`-v`**: Print verbose descriptions of each step in program's progress (default: false) 
 
 
 ## Example
@@ -95,14 +91,41 @@ This will make an Random Forest using the MNIST canned dataset with a maximum de
 
 ## Outputs
 The **trainEnsemble.py** script creates the follwing files:  
-**model.pickle**: a serialized Scikit Learn Random Forest model  
-**report.txt**: a file that contains the parameters used for training the model  
-**testing_data.pickle**: a serialized file containing the training data for testing the model
+- **model.pickle**: a serialized Scikit Learn decision tree ensemble model  
+- **report.txt**: a file that contains the parameters used for training the model  
+- **testing_data.pickle**: a serialized file containing the testing data
 
 ---
 
 ## Other Inputs
 If you do not need customized inputs, the "inputs" folder contains a number of standardized input files.
+
+---
+
+# Majority Voter - bin/classify.py 
+
+## Inputs
+The Random Forest classify script, **classify.py**, reads a reports file generated by VASIM, and generates a file containing the resulting classifications.
+
+The command line parameters are in this format:
+
+`classify.py reports_0tid_0packet.txt`
+
+## Usage Parameter Descriptions
+
+### reports file
+This file is generated by VASIM with the **-r** flag, and contains one line per report.
+
+
+### [OPTIONS]
+You can also specifiy these optional parameters:
+- **`-o <classification output filename>`**: You can specify the classification filename. (default: classifications.txt) 
+
+
+## Outputs
+The resulting output file contains one line per classification in the following format:
+
+*input index:classification*
 
 ---
 
