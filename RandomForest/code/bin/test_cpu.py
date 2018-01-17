@@ -49,7 +49,7 @@ def load_test(testfile):
 
     return X_test, y_test
 
-
+# Main()
 if __name__ == '__main__':
 
     # Parse Command Line Arguments
@@ -85,6 +85,7 @@ if __name__ == '__main__':
         logging.info("Model: nTrees: %d, maxDepth:%d, nJobs: %d" %
 		     (model.n_estimators, model.max_depth, model.n_jobs))
 
+    # Load data
     X_test, y_test = load_test(options.test)
     logging.info("Test Data: %d samples x %d features" % (X_test.shape))
 

@@ -16,7 +16,6 @@
 # Utility Imports
 import copy
 
-
 # Define Node class
 class Node(object):
 
@@ -157,9 +156,11 @@ class Chain(object):
     # Add a node to the chain
     def add_node(self, node):
 
+        # If this node already exists, return -1
         if node in self.nodes_:
             return -1
 
+        # Otherwise, append the new node
         else:
             self.nodes_.append(node)
 

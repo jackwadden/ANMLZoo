@@ -78,14 +78,15 @@ class FeatureTable(object):
 
         # Enumerate all stes
         for i, ste in enumerate(self.stes_):
-            string += colored("STE:%d[", 'blue') % i
+            string += colored("STE:%d", 'blue') % i
+            string += "["
 
             # Enumerate all ranges
             for j, r in enumerate(ste):
                 string += (colored(str(r), 'green') if r != -1 else
                            colored(str(r), 'red'))
                 string += "]"
-                string += ("[") if j != len(ste) - 1 else colored("]", 'blue')
+                string += ("[") if j != len(ste) - 1 else "]"
 
         return string
 
@@ -163,7 +164,7 @@ class FeatureTable(object):
                    short=False, delimited=True):
 
         if short:
-            X = X[:100]
+            X = X[:10]
 
         print "Writing %d samples to input file" % X.shape[0]
 

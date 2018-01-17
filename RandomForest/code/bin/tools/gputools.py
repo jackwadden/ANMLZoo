@@ -1,5 +1,6 @@
 '''
     This module is meant for generating GPU chains
+    for testing on the GPU
 
     ----------------------
     Author: Tom Tracy II

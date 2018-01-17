@@ -19,10 +19,11 @@ import logging
 # RF Automata Imports
 from classes.chain import *
 from classes.featureTable import *
+import tools.charactersets as cs
+
 
 # Turn on logging.
 logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.INFO)
-
 
 # Load the quickrank xml file
 def load_qr(modelfile):
@@ -233,7 +234,7 @@ if __name__ == '__main__':
     # Set the character sets for each node in the chains
     # Then sort and combine the states in the chains
     for chain in chains:
-        automatize.set_character_sets(chain, ft)
+        cs.set_character_sets(chain, ft)
         chain.sort_and_combine()
 
     logging.info("Dumping Chains, Feature Table, and Value Map to pickle")

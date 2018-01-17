@@ -1,19 +1,16 @@
 #!/usr/bin/env python
-'''
+"""
     The purpose of this program is to train a decision-tree based learning
     algorithm using Scitkit-Learn and to write the resulting model and testing
-    data to their respective files.
+    data to their respective files for automatization.
     ----------------------
     Author: Tom Tracy II
     email: tjt7a@virginia.edu
     University of Virginia
     ----------------------
-    12 March 2017
-    Version 0.2
-
-    Revisions:
-    15 March: Included 'max_leaf_nodes' support, converted spaces into tabs
-'''
+    16 January 2018
+    Version 0.3
+"""
 
 # Support Imports
 import pickle
@@ -28,6 +25,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
 
+# Feature selection imports
+from sklearn.feature_selection import SelectKBest, chi2
+
 # Dataset Imports
 from sklearn.datasets import fetch_mldata
 
@@ -37,11 +37,15 @@ from sklearn import metrics
 # Global dictionaries
 model_names = {'rf': 'Random Forest',
                'brt': 'Boosted Regression Trees',
-               'ada': 'Adaboost Classifier'}
+               'ada': 'Adaboost Classifier',
+               'xgb': 'XGboost'
+               }
 
 metric_names = {'acc': 'accuracy',
                 'f1': 'f1-score',
-                'mse': 'mean squared error'}
+                'mse': 'Mean Squared Error',
+                'auc': 'Area Under the Curve'
+                }
 
 datasets = {'mnist': 'MNIST original'}
 
@@ -50,85 +54,96 @@ logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.INFO)
 
 
 # Train the model on the given training data
-def train_model(model, X_train, y_train):
+def train_model(model_, x_train_, y_train_):
 
-    model.fit(X_train, y_train.ravel())
+    model_.fit(x_train_, y_train_.ravel())
 
 
 # Test the model on the given testing data
-def test_model(model, X_test, y_test, metric):
+def test_model(model_, x_test_, y_test_, metric_):
 
-    if metric == 'acc':
+    if metric_ == 'acc':
 
-        return metrics.accuracy_score(y_test, model.predict(X_test))
+        return metrics.accuracy_score(y_test_, model_.predict(x_test_))
 
-    elif metric == 'f1':
+    elif metric_ == 'f1':
 
-        return metrics.f1_score(y_test, model.predict(X_test))
+        return metrics.f1_score(y_test_, model_.predict(x_test_))
 
-    elif metric == 'mse':
+    elif metric_ == 'mse':
 
-        return metrics.mean_squared_error(y_test, model.predict(X_test))
+        return metrics.mean_squared_error(y_test_, model_.predict(x_test_))
 
     else:
 
-        raise ValueError("Invalid metric %s provided" % metric)
-
-        return -1
+        raise ValueError("Invalid metric %s provided" % metric_)
 
 
 # Dump the model to a file
-def dump_model(model, modelfile):
+def dump_model(model_, modelfile):
 
     with open(modelfile, 'wb') as f:
 
-        pickle.dump(model, f)
-
-    return 0
+        pickle.dump(model_, f)
 
 
 # Dump test data
-def dump_test(X_test, y_test, testfile):
+def dump_test(x_test_, y_test_, testfile_):
 
-    with open(testfile, 'wb') as f:
+    with open(testfile_, 'wb') as f:
 
-        pickle.dump((X_test, y_test), f)
-
-    return 0
+        pickle.dump((x_test_, y_test_), f)
 
 
 # Write report out to file
-def write_report(report_name, report_dict):
+def write_report(report_name_, report_dict_):
 
-    with open(report_name, 'w') as f:
+    with open(report_name_, 'w') as f:
 
-        for key, value in report_dict.items():
+        for key, value in report_dict_.items():
 
             f.write(str(key) + ":" + str(value))
 
-    return 0
 
 # Calculate the average throughput of the model on the CPU
-def get_throughput(model, X_test, iters):
+def print_throughput(model_, x_test_, iters_):
 
-    print("Model: ", str(model))
+    logging.info("Model: %s" % str(model_))
+    logging.info("Test Data: %d samples x %d features" % x_test_.shape)
 
-    logging.info("Test Data: %d samples x %d features" % (X_test.shape))
-
+    # Grab the start time
     start_time = time.time()
 
-    for i in range(iters):
-        model.predict(X_test)
+    # Do a bunch of predictions
+    for i in range(iters_):
+        model_.predict(x_test_)
 
+    # Grab the end time
     end_time = time.time()
 
-    avg_time = (end_time - start_time) / float(iters)
-    print("Avg Time: ", avg_time)
+    # Grab average time per iterations
+    avg_time = (end_time - start_time) / float(iters_)
 
-    throughput = float(X_test.shape[0]) / avg_time
+    logging.info("Average Time: %f" % avg_time)
+
+    # Throughput = num_feature_vectors / average time per iteration
+    throughput = float(x_test_.shape[0]) / avg_time
+
+    # Metric becomes kilo-samples / sec
     kthroughput = throughput / 1000.0
 
-    logging.info("Throughput: %f ksamples / second" % (kthroughput))
+    logging.info("Throughput: %f ksamples / second" % kthroughput)
+
+# Dump the predictions made by the model to a file for testing
+def dump_predictions(model_, x_test_, filename_):
+
+    predictions = model_.predict(x_test_)
+
+    with open(filename_, 'w') as f:
+
+        for prediction in predictions:
+
+            f.write(str(int(prediction)) + '\n')
 
 
 # Main()
@@ -137,31 +152,54 @@ if __name__ == '__main__':
     # Parse Command Line Arguments
     usage = '%prog [options][text]'
     parser = OptionParser(usage)
+
     parser.add_option('-c', '--canned', type='string', dest='canned',
                       help='A canned dataset included in SKLEARN (mnist)')
+
     parser.add_option('-t', '--train', type='string', dest='trainfile',
                       help='Training Data File (.npz file)')
+
     parser.add_option('-x', '--test', type='string', dest='testfile',
                       help='Testing Data File (.npz file)')
+
     parser.add_option('--metric', type='string', default='acc',
                       dest='metric',
                       help='Provide the training metric to be displayed')
+
     parser.add_option('-m', '--model', type='string', dest='model',
                       help='Choose the model')
+
     parser.add_option('--model-out', type='string', dest='modelout',
                       default='model.pickle', help='Output model file')
+
     parser.add_option('-d', '--depth', type='int', dest='depth',
                       help='Max depth of the decision tree learners')
+
     parser.add_option('-l', '--leaves', type='int', dest='leaves',
                       help='Max number leaves of the decision tree learners')
+
     parser.add_option('-n', '--tree_n', type='int', dest='tree_n',
                       help='Number of decision trees')
+
+    parser.add_option('-f', '--n_features', type='int', dest='n_features',
+                      help='The number of features when fit is performed.')
+
     parser.add_option('-j', '--njobs', type='int', dest='njobs',
                       help='Number jobs to run in parallel for fit/predict')
+
+    parser.add_option('--feature_importance', action='store_true', default=False,
+                      dest='feature_importance',
+                      help='Dump the feature importance values of the trained forest')
+
     parser.add_option('-v', '--verbose', action='store_true', default=False,
                       dest='verbose', help='Verbose')
+
     parser.add_option('-r', '--report', type='string', dest='report',
                       default='report.txt', help='Name of the report file')
+
+    parser.add_option('-p', '--predictions', type='string', dest='predictions',
+                      default='predictions.txt', help='Predictions made by model')
+
     options, args = parser.parse_args()
 
     params = {}
@@ -175,7 +213,6 @@ if __name__ == '__main__':
         if options.canned not in datasets.keys():
             raise ValueError("No valid training data filename specified; \
                               provide -t or a valid canned dataset")
-            exit(-1)
         else:
             canned = True
 
@@ -188,14 +225,12 @@ if __name__ == '__main__':
     if options.model not in model_names.keys():
         raise ValueError("No valid model specified;\
                          provide {'rf', 'brt', 'ada'}")
-        exit(-1)
 
     if options.depth is None:
 
         if options.leaves is None:
             raise ValueError("No valid tree depth or leaves specified;\
                              provide -d <max depth> or -l <max leaves>")
-            exit(-1)
         else:
             params['max_leaf_nodes'] = options.leaves
             report_dict['max_leaf_nodes'] = options.leaves
@@ -205,7 +240,6 @@ if __name__ == '__main__':
 
     if options.tree_n is None:
         raise ValueError("No tree count specified; provide -n <num trees>")
-        exit(-1)
 
     params['n_estimators'] = options.tree_n
     report_dict['n_estimators'] = options.tree_n
@@ -218,9 +252,9 @@ if __name__ == '__main__':
         logging.info("Loading training file from %s" % options.trainfile)
 
     if canned:
-        mnist = fetch_mldata(datasets[options.canned])
-        X = mnist.data
-        y = mnist.target
+        canned_dataset = fetch_mldata(datasets[options.canned])
+        X = canned_dataset.data
+        y = canned_dataset.target
 
     else:
         # Load the training files
@@ -263,21 +297,33 @@ if __name__ == '__main__':
 
     if options.model == 'rf':
         model = RandomForestClassifier(**params)
+
     elif options.model == 'brt':
         model = GradientBoostingClassifier(**params)
+
     elif options.model == 'ada':
         del params['max_depth']
         del report_dict['max_depth']
         model = AdaBoostClassifier(**params)
+
     else:
         raise ValueError("No valid model specified")
-        exit(-1)
 
     report_dict['model'] = model
+
+    # Transform X to n_features
+    if options.n_features is not None:
+
+        # For simplicity, we're going to use the CHI-squared test to choose the
+        # n_features least correlated features to train our model
+        ch2 = SelectKBest(chi2, k=int(options.n_features))
+        X_train = ch2.fit_transform(X_train, y_train)
+        X_test = ch2.transform(X_test)
 
     if options.verbose:
         logging.info("Training the %s model" % model_names[options.model])
 
+    # Train the model
     train_model(model, X_train, y_train)
 
     if options.verbose:
@@ -302,14 +348,20 @@ if __name__ == '__main__':
     if options.verbose:
         logging.info("Writing testing data out to testing_data.pickle")
 
+    # Dump the feature importance values
+    if options.feature_importance:
+        print "Feature Importance: "
+        print model.feature_importances_
+
     # Write out the test data for testing with the automata
     dump_test(X_test, y_test, "testing_data.pickle")
 
-    # Get throughput results for the CPU
-    get_throughput(model, X_test, 100)
+    # Print throughput results for the CPU after 100 testing loops
+    print_throughput(model, X_test, 100)
 
+    # Write out the predictions made by the model (for testing)
+    dump_predictions(model, X_test, options.predictions)
+
+    # Write out the report
     if options.report is not None:
         write_report(options.report, report_dict)
-
-    if options.verbose:
-        logging.info("Done")
