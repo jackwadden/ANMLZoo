@@ -1,19 +1,19 @@
 /*
-	Leven - Levenshtein automata creator
+  Leven - Levenshtein automata creator
 
-	Author: Jeffrey Udall 
-	Email: jeff.udall@gmail.com
-	University of Virginia 2017
+  Author: Jeffrey Udall 
+  Email: jeff.udall@gmail.com
+  University of Virginia 2017
 
-	Levenshtein wiring algorithm based on paper:
-		T. Tracy II, M. Stan, N. Brunelle, J. Wadden, K. Wang, K. Skadron, G. Robins, 
-		"Nondeterministic Finite Automata in Hardware - the Case of the Levenshtein Automaton" 
-		University of Virginia, Charlottesville, VA, 
-		Proceedings of the Workshop on Architectures and Systems for Big Data (ASBD), 
-		in conjunction with ISCA, June 2015.
+  Levenshtein wiring algorithm based on paper:
+  T. Tracy II, M. Stan, N. Brunelle, J. Wadden, K. Wang, K. Skadron, G. Robins, 
+  "Nondeterministic Finite Automata in Hardware - the Case of the Levenshtein Automaton" 
+  University of Virginia, Charlottesville, VA, 
+  Proceedings of the Workshop on Architectures and Systems for Big Data (ASBD), 
+  in conjunction with ISCA, June 2015.
 
-	Dependances:
-		VASim by Jack Wadden - https://github.com/jackwadden/VASim
+  Dependances:
+  VASim by Jack Wadden - https://github.com/jackwadden/VASim
 */
 
 #include "automata.h"
@@ -23,6 +23,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstring>
 
 using namespace std;
 
@@ -41,464 +42,620 @@ void usage(char * argv); // Usage info funct
 
 int main(int argc, char * argv[]) {
 
-	if (argc < 4 || 6 < argc){ // Check if allowed amount of arguments
-		cout << "\n  ERROR: Not enough input arguments" << endl;
-		usage(argv[0]);	// [Print help doc] //
-	}
+    bool reduce = false; // whether or not to implement 'within N' edit distance
+    
+    if (argc < 4){ // Check if allowed amount of arguments
+        cout << "\n  ERROR: Not enough input arguments" << endl;
+        usage(argv[0]);	// [Print help doc] //
+    }
+    
+    // Check to make sure mode is one of the three allowed
+    else if ((*argv[1] == 's') || ( *argv[1] == 'f') || (*argv[1] == 'r')){ 
 
-	// Check to make sure mode is one of the three allowed
-	else if ((*argv[1] == 's') || ( *argv[1] == 'f') || (*argv[1] == 'r')){ 
+        // Parse input //
+        char mode = *argv[1]; // Set mode
 
-		// Parse input //
-		char mode = *argv[1]; // Set mode
-		string stringfilewidth = argv[2];
-		string lev_dist = argv[3]; // Get lev edit dist from input
-		string lev_iter = argv[5]; // Get number of iterations for rand from input
+        string stringfilewidth = argv[2];
+        string lev_dist = argv[3]; // Get lev edit dist from input
 
-		int i, j; // set counting vars
+        int i, j; // set counting vars
 
-		string p; // set pattern string var
-		int width; // set width var
-		int d; // set edit dist var
-		int iter; // Make iter var
+        string p; // set pattern string var
+        int width; // set width var
+        int d; // set edit dist var
+        int iter; // Make iter var
 
-		string stemp; // set temp string
-		string filename; // delare filename string
-		string prand; // make rand pattern string var
-		string rand_type; // set rand type string
+        string stemp; // set temp string
+        string filename; // delare filename string
+        string prand; // make rand pattern string var
+        string rand_type; // set rand type string
 
-		string outname; // set output file name string
+        string outname; // set output file name string
 
-		string blank = " ";
+        string blank = " ";
 
-		Automata ap; // make automata file
+        Automata ap; // make automata file
 
 
 	/***************************
-	*	STRING options
-	***************************/
-		iter = 1; // Set iterations to one
+         *	STRING options
+         ***************************/
+        // check to see if we should reduce the automata
+        for(i = 0; i < argc; i++) {
+            if(strcmp(argv[i],"--reduce") == 0)
+                reduce = true;
+        }
+        
+        iter = 1; // Set iterations to one
 		
-		if (mode == 's'){ 
-			cout << "\n  Mode: STRING" << endl;
+        if (mode == 's'){ 
+            cout << "\n  Mode: STRING" << endl;
 
-			p = stringfilewidth;
-			cout << "  Pattern = " << p << endl;
+            p = stringfilewidth;
+            cout << "  Pattern = " << p << endl;
 
-			width = p.length(); // Get pattern length for array width
-			cout << "  Pattern width = " << width << endl; // Print out width
-			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
-				exit(EXIT_FAILURE);					
-			}
+            width = p.length(); // Get pattern length for array width
+            cout << "  Pattern width = " << width << endl; // Print out width
 
-			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
-			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
-				exit(EXIT_FAILURE);					
-			}cout << "  Edit dist: " << d << endl;
+            if (width >= 200){ // Check that width is less than 200 - to keep reasonable for AP chip
+                cout << "  ERROR: Pattern too wide!\n\t (Must be 199 characters or less)" << endl;
+                exit(EXIT_FAILURE);					
+            }
+
+            d = (int)lev_dist[0]-48; // put edit dist into an integer variable
+            if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
+                cout << "  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
+                exit(EXIT_FAILURE);					
+            }cout << "  Edit dist: " << d << endl;
 	
-			outname = p + "_d" + lev_dist; // set output name to pattern name
-		}
+            outname = p + "_d" + lev_dist; // set output name to pattern name
+        }
 
 	/***************************
-	*	FILE options
-	***************************/
-		else if (mode == 'f'){ 
-			cout << "\n  Mode: FILE" << endl;
+         *	FILE options
+         ***************************/
+        else if (mode == 'f'){ 
+            cout << "\n  Mode: FILE" << endl;
 
-			filename = stringfilewidth; // Get file name from command line input
+            filename = stringfilewidth; // Get file name from command line input
 
-			d = (int)lev_dist[0]-48; // put edit dist into an integer variable
-			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
-				exit(EXIT_FAILURE);					
-			}cout << "  Edit dist: " << d << endl;
+            d = (int)lev_dist[0]-48; // put edit dist into an integer variable
+            if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
+                cout << "  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
+                exit(EXIT_FAILURE);					
+            }cout << "  Edit dist: " << d << endl;
 
-			ifstream pfile(filename); // open input file into pattern string
+            ifstream pfile(filename); // open input file into pattern string
 
-			if (pfile.is_open() == 0){ // Check to see if file is open
-				cout << "  ERROR: Unable to open file! \n\t Please check file name and try again." << endl;
-				exit(EXIT_FAILURE);
-			}
+            if (pfile.is_open() == 0){ // Check to see if file is open
+                cout << "  ERROR: Unable to open file! \n\t Please check file name and try again." << endl;
+                exit(EXIT_FAILURE);
+            }
 
-			iter=0; // set iterations to zero
-			for(; ; ){ // Loop to get number of lines = iterations
-				getline(pfile, stemp);
-				if (stemp == ""){
-					break;
-				}
-				++iter; // increase iterations
-			}cout << "  Iterations: " << iter << endl;
+            iter=0; // set iterations to zero
+            for(; ; ){ // Loop to get number of lines = iterations
+                getline(pfile, stemp);
+                if (stemp == ""){
+                    break;
+                }
+                ++iter; // increase iterations
+            }cout << "  Iterations: " << iter << endl;
 			
-			stemp.clear();
+            stemp.clear();
 
-			pfile.clear();
-			pfile.seekg(0, ios::beg); // Set reading location to begining of file
+            pfile.clear();
+            pfile.seekg(0, ios::beg); // Set reading location to begining of file
 
-			  /*---------------------------/
-			 /   Get maximum line width   /
-			/---------------------------*/
-			int width_max; // make max width var
-			int width_line[iter];
+            /*---------------------------/
+              /   Get maximum line width   /
+              /---------------------------*/
+            int width_max; // make max width var
+            int width_line[iter];
 
 
-			// Find length of each line
-			for (i = 0; i < iter; ++i){
-				getline(pfile, stemp);
-				//cout << "  stemp: " << stemp << endl;
-				width_line[i] = stemp.size(); // Get pattern length for array width
-				//cout << "  width_line: " << width_line[i] << endl;
-			}
+            // Find length of each line
+            for (i = 0; i < iter; ++i){
+                getline(pfile, stemp);
+                //cout << "  stemp: " << stemp << endl;
+                width_line[i] = stemp.size(); // Get pattern length for array width
+                //cout << "  width_line: " << width_line[i] << endl;
+            }
 
-			// Find longest line
-			width_max = width_line[0];
-			for (i=1; i<iter; i++){
-				if (width_line[i] > width_max) 
-					width_max = width_line[i];
-			}
+            // Find longest line
+            width_max = width_line[0];
+            for (i=1; i<iter; i++){
+                if (width_line[i] > width_max) 
+                    width_max = width_line[i];
+            }
 
-			width = width_max; // Set width var to max width of strings from file
-			cout << "  Longest width: " << width << endl;
+            width = width_max; // Set width var to max width of strings from file
+            cout << "  Longest width: " << width << endl;
 
-			if (width > 99){ // Output error if width larger than 99
-				cout << "  ERROR: Width too large!\n\t Must be less than 100" << endl;
-				exit(EXIT_FAILURE);
-			}
+            if (width >= 200){ // Output error if width larger than 199
+                cout << "  ERROR: Width too large!\n\t (Must be less than 200)" << endl;
+                exit(EXIT_FAILURE);
+            }
 
-			pfile.close(); // Close pfile
+            pfile.close(); // Close pfile
 
-			outname = filename + "_d" + lev_dist; // set output name to file name
-		}
+            outname = filename + "_d" + lev_dist; // set output name to file name
+        }
 
 	/***************************
-	*	RANDOM options
-	***************************/
-		else if (mode == 'r'){ 
-			cout << "\n  Mode: RANDOM" << endl;
+         *	RANDOM options
+         ***************************/
+        else if (mode == 'r'){ 
+            cout << "\n  Mode: RANDOM" << endl;
 
-			// Set vars
-			string lev_width = stringfilewidth; // Get levenshtein width from input
-
-			stringstream rand_width(lev_width); // Get width from command line argument
-			if(rand_width) { // Check if width input is a number
-				rand_width >> width; // If so, set width variable
-				if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-					cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
-					exit(EXIT_FAILURE);					
-				}
-			}else{ // Output error and end program
-				cout << "\n  ERROR: Improper width!\n\t Must be number amount" << endl;
-				exit(EXIT_FAILURE);
-			}cout << "  Width: " << width << endl;
-
-			if (width >= 100){ // Check that width is less than 100 - to keep reasonable for AP chip
-				cout << "  ERROR: Pattern too wide!\n\t Must be 99 characters or less" << endl;
-				exit(EXIT_FAILURE);					
-			}
-
-
-			d = (int)lev_dist[0]-48; // Put edit distance into an int
-			if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
-				cout << "\n  ERROR: Leven edit dist too large!\n\t Must 5 or less" << endl;
-				exit(EXIT_FAILURE);					
-			}	cout << "  Edit dist: " << d << endl;
-
-			rand_type = argv[4]; // Get random mode type - DNA or alphanum
-
-			stringstream rand_iters(lev_iter); // Get iterations from command line argument
-			if(rand_iters) { // Check if iteration input is a number
-				rand_iters >> iter; // If so, set iter variable
-				if (iter >= 100){ // Make sure iterations less than 100 - to keep reasonable for AP chip
-					cout << "\n  ERROR: Too many iterations!\n\t Must be less than 100" << endl;
-					exit(EXIT_FAILURE);					
-				}
-			}else{ // Output error and end program
-				cout << "\n  ERROR: Improper iterations!\n\t Must be number amount" << endl;
-				exit(EXIT_FAILURE);
-			}cout << "  Iterations: " << iter << endl;
+            if (argv[4] == 0){ // Check that there is rand type
+                cout << "\n  ERROR: Need random type (DNA or alphanum)" << endl;
+                cout <<"\n  USAGE: leven r [width] [edit dist] [DNA or alphanum] [iterations]"<< endl;
+                exit(EXIT_FAILURE);					
+            }
 
 
 
-			// Check if rand type is correct
-			if ((rand_type != "DNA") && (rand_type != "alphanum")){ 
-				cout << "\n  ERROR: Incorrect random mode type!\n\t Must be 'DNA' or 'alphanum'" << endl;
-				exit(EXIT_FAILURE);
-			}
+            if (argv[5] == 0){ // Check that there is rand iterations
+                cout << "\n  ERROR: Need iteration ammount!" << endl;
+                cout <<"\n  USAGE: leven r [width] [edit dist] [DNA or alphanum] [iterations]"<< endl;
+                exit(EXIT_FAILURE);					
+            }
 
-			srand(time(NULL)); // update seed for random numbers
+            string lev_iter = argv[5]; // Get number of iterations for rand from input
 
-			outname = rand_type + "_w" + lev_width + "_d" + lev_dist+ "_x" + lev_iter; // set output name to file name
+            // Set vars
+            string lev_width = stringfilewidth; // Get levenshtein width from input
 
-		}
+            stringstream rand_width(lev_width); // Get width from command line argument
 
-/***************************
-*	Make Levenshtein
-***************************/
+            if(rand_width) { // Check if width input is a number
+                rand_width >> width; // If so, set width variable
+            }else{ // Output error and end program
+                cout << "\n  ERROR: Improper width!\n\t (Must be number amount)" << endl;
+                exit(EXIT_FAILURE);
+            }cout << "  Width: " << width << endl;
 
-		int i_name[4]; // STE index name variable of size 4 
-					   // [iterations][edit dist][width][char/star]
-		string STE_name; // string for final STE name
-		ostringstream convert_n; // var used to convert number into string
-		string STE_symbol; // temp string for STE symbol (char or star)
-
-		// Start states
-		string start = "all-input"; // string for start state "all"
-		string off = "none"; // string for start state "none"
-
-		ifstream patfile(filename); // open input file again for ANML file
-
-		//  **[ Make 3D array of STEs ]** //
-		STE *index[iter][d + 1][width + 1][2];
-		//  Size is: [iterations], [edit dist + 1], [max string width + 1], [2 - char or star]
-
-		/*---------------------------
-		 	Create ANML file
-		---------------------------*/
-		int w = 0; // set iteration count flag
-		//int c = 0; // Make counting var for pattern characters
-
-		// ANML Loop - over num of iterations
-		for (w = 0; w < iter; ++w){ 
-
-			if (mode != 's'){ // FILE and RAND options for loop
-				p.clear(); // Clear pattern var
-
-				if (mode == 'f'){ // Get FILE pattern
-					getline(patfile, stemp);
-					p = stemp;
-					width = p.length(); // Get pattern width
-				}
-
-				if (mode == 'r'){ // Get RAND pattern
-					// Make random strings
-					if (rand_type == "DNA") // Check if rand type is DNA
-						p = randDNA(width); // run rand DNA funct
-					else if (rand_type == "alphanum") // Check if rand type is alpha-numeric
-						p = randalpha(width); // run rand alpha funct
-				}
-				cout << "  Pattern[" << w+1 << "]: " << p << endl;
-			}
+			
+            if (width >= 200){ // Output error if width larger than 199 - to keep reasonable for AP chip
+                cout << "  ERROR: Pattern too wide!\n\t (Must be 199 characters or less)" << endl;
+                exit(EXIT_FAILURE);					
+            }
 
 
-			if (width <= d){ // Check to make sure width of pattern is bigger than edit distance
-				cout << "\n  ERROR: String pattern width must be larger than edit distance!" << endl;
-				cout << "  Width: " << width << endl;
-				cout << "  Edit dist: " << d << endl;
-				exit(EXIT_FAILURE);
-			}
+            d = (int)lev_dist[0]-48; // Put edit distance into an int
+            if (d > 5){ // Make sure edit dist 5 or less to keep reasonable for AP chip
+                cout << "\n  ERROR: Leven edit dist too large!\n\t (Must 5 or less)" << endl;
+                exit(EXIT_FAILURE);					
+            }	cout << "  Edit dist: " << d << endl;
+
+            rand_type = argv[4]; // Get random mode type - DNA or alphanum
+
+            stringstream rand_iters(lev_iter); // Get iterations from command line argument
+            if(rand_iters) { // Check if iteration input is a number
+                rand_iters >> iter; // If so, set iter variable
+                if (iter >= 100){ // Make sure iterations less than 100 - to keep reasonable for AP chip
+                    cout << "\n  ERROR: Too many iterations!\n\t Must be less than 100" << endl;
+                    exit(EXIT_FAILURE);					
+                }
+            }else{ // Output error and end program
+                cout << "\n  ERROR: Improper iterations!\n\t Must be number amount" << endl;
+                exit(EXIT_FAILURE);
+            }cout << "  Iterations: " << iter << endl;
 
 
-			/*---------------------------
-			  Populate STE array
-			---------------------------*/
 
-			// Populate char STEs - index [w][y][x][1]
-			for (i = 0; i <= d; i=i+1) { // loop over edit distance
-				for (j = 1; j <= width; j = j+1) { // loop over width
+            // Check if rand type is correct
+            if ((rand_type != "DNA") && (rand_type != "alphanum")){ 
+                cout << "\n  ERROR: Incorrect random mode type!\n\t Must be 'DNA' or 'alphanum'" << endl;
+                exit(EXIT_FAILURE);
+            }
 
-					// Create STE name
-					i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 1;
+            srand(time(NULL)); // update seed for random numbers
 
-					// Put STE name into temp string
-					if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
-						convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
-					else if( (j > 9) && (w <= 9)) // If iter smaller than 10, add 0 in front
-						convert_n << "0" << i_name[0] << i_name[1] << i_name[2] << i_name[3];
-					else if( (j <= 9) && (w > 9)) // If width smaller than 10, add 0 in front
-						convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
-					else  //If width and iter smaller than 10, add 0 in front of both
-						convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+            outname = rand_type + "_w" + lev_width + "_d" + lev_dist+ "_x" + lev_iter; // set output name to file name
 
-					STE_name = convert_n.str(); // Copy STE name into STE_name var
-					//cout << "  char STE name: " << STE_name << endl;
+        }
 
-					convert_n = ostringstream(); // Clear temp stream string
-					STE_symbol = p[j-1]; // Get STE symbol from p string
+        /***************************
+         *	Make Levenshtein
+         ***************************/
 
-					//cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
+        int i_name[4]; // STE index name variable of size 4 
+        // [iterations][edit dist][width][char/star]
+        string STE_name; // string for final STE name
+        ostringstream convert_n; // var used to convert number into string
+        string STE_symbol; // temp string for STE symbol (char or star)
 
-					if (STE_symbol.compare(blank) == 0 ){ // Check for blank spaces
-						cout << "\n  ERROR: String pattern cannot contain blank spaces!" << endl;
-						cout << "  Pattern[" << w+1 << "] character[" << j << "] = [" << STE_symbol << "]" << endl;
-						exit(EXIT_FAILURE);
-					}
+        // Start states
+        string start = "all-input"; // string for start state "all"
+        string off = "none"; // string for start state "none"
 
-					STE_symbol = "["+STE_symbol+"]"; // Add brackets around character
+        ifstream patfile(filename); // open input file again for ANML file
 
-					//cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
-					//cout << "  blank =  [" << blank << "]" << endl;
+        //  **[ Make 3D array of STEs ]** //
+        STE *index[iter][d + 1][width + 1][2];
+        //  Size is: [iterations], [edit dist + 1], [max string width + 1], [2 - char or star]
 
 
-					if (j == i+1)  // Set starting and late start blocks
-						// Make new STE with name, symbol, and start values
-						index[w][i][j][1] = new STE(STE_name, STE_symbol, start);
+        string width_name; // width temp name string
+        string iter_name; // iter temp name string
+        ostringstream temp_n; // temp string for renaming 
 
-					else  // Set non-starting blocks
-						// Make new STE with name, symbol, and start values
-						index[w][i][j][1] = new STE(STE_name, STE_symbol, off);
+        /*---------------------------
+          Create ANML file
+          ---------------------------*/
+        int w = 0; // set iteration count flag
+        //int c = 0; // Make counting var for pattern characters
 
-			}	}	
+        // ANML Loop - over num of iterations
+        for (w = 0; w < iter; ++w){ 
 
-			//Populate star STEs  - index [w][y][x][0]
-			for (i = 1; i <= d; ++i) {// loop over edit distance
-				for (j = 0; j <= width; ++j) { // loop over width
+            if (mode != 's'){ // FILE and RAND options for loop
+                p.clear(); // Clear pattern var
 
-					// Create STE name
-					i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 0; 
+                if (mode == 'f'){ // Get FILE pattern
+                    getline(patfile, stemp);
+                    p = stemp;
+                    width = p.length(); // Get pattern width
+                }
 
-					// Put STE name into temp string
-					if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
-						convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
-					else if( (j > 9) && (w <= 9)) // If iter smaller than 10, add 0 in front
-						convert_n << "0" << i_name[0] << i_name[1] << i_name[2] << i_name[3];
-					else if( (j <= 9) && (w > 9)) // If width smaller than 10, add 0 in front
-						convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
-					else  //If width and iter smaller than 10, add 0 in front of both
-						convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
-
-					STE_name = convert_n.str(); // Clear temp stream string
-					//cout << "  star STE name: " << STE_name << endl;
-
-					convert_n = ostringstream(); // clear stream string
-
-					if ((i == 1) && (j == 0)) // Set simple starting error block
-						index[w][i][j][0] = new STE(STE_name, "*", start);
-
-					else if (j == i)  // Set starting error blocks
-						index[w][i][j][0] = new STE(STE_name, "*", start);
-
-					else  // Set non-starting blocks
-						index[w][i][j][0] = new STE(STE_name, "*", off);
-			}	}	
+                if (mode == 'r'){ // Get RAND pattern
+                    // Make random strings
+                    if (rand_type == "DNA") // Check if rand type is DNA
+                        p = randDNA(width); // run rand DNA funct
+                    else if (rand_type == "alphanum") // Check if rand type is alpha-numeric
+                        p = randalpha(width); // run rand alpha funct
+                }
+                cout << "  Pattern[" << w+1 << "]: " << p << endl;
+            }
 
 
-			/*---------------------------
-				  Set Reporting STEs
-			 ---------------------------*/
-			//Set reporting char STEs - index [y][x][1]
-			int rep_dist = width-d; // Make and set reporting distance var for chars
-
-			for (i = 0; i <= d; ++i) {
-				for (j = rep_dist; j <= width; ++j) 
-					index[w][i][j][1]->setReporting(true);
-				++rep_dist; // increase report distance for next row
-			}
-			//Set reporting star STEs  - index [y][x][0]
-			rep_dist = width-d+1; // Set reporting distance var for stars
-			for (i = 1; i <= d; ++i) {
-				for (j = rep_dist; j <= width; ++j) 
-					index[w][i][j][0]->setReporting(true);
-				++rep_dist; // increase report distance for next row
-			}
-
-			/*---------------------------
-			   Add STEs to data structure
-			 ---------------------------*/
-			// char STEs
-			for (i = 0; i <= d; ++i) {
-				for (j = 1; j <= width; ++j) 
-					ap.rawAddSTE(index[w][i][j][1]);
-			}	
-			// star STEs
-			for (i = 1; i <= d; ++i) {
-				for (j = 0; j <= width; ++j) 
-					ap.rawAddSTE(index[w][i][j][0]);
-			}	
+            if (width <= d){ // Check to make sure width of pattern is bigger than edit distance
+                cout << "\n  ERROR: String pattern width must be larger than edit distance!" << endl;
+                cout << "  Width: " << width << endl;
+                cout << "  Edit dist: " << d << endl;
+                exit(EXIT_FAILURE);
+            }
 
 
-			/*---------------------------
-			 * Add edges between STEs
-			 ---------------------------*/
-			// *** MATCH edges *** //
-			for (i = 0; i <= d; ++i) { // char STEs
-				for (j = 1; j < width; ++j) 
-					ap.addEdge(index[w][i][j][1], index[w][i][j+1][1]);
-			}	
-			for (i = 1; i <= d; ++i) { //star STEs
-				for (j = 0; j < width; ++j) 
-					ap.addEdge(index[w][i][j][0], index[w][i][j + 1][1]);
-			}	
+            /*---------------------------
+              Populate STE array
+              ---------------------------*/
+
+            // Populate char STEs - index [w][y][x][1]
+            for (i = 0; i <= d; i=i+1) { // loop over edit distance
+                for (j = 1; j <= width; j = j+1) { // loop over width
+
+                    // Create STE name
+                    i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 1;
 
 
-			// *** INSERTION edges *** //
-			for (i = 0; i < d; ++i) { // char STEs
-				for (j = 1; j <= width; ++j) 
-					ap.addEdge(index[w][i][j][1], index[w][i+1][j][0]);
-			}	
-			if (d > 1) { // Only use these edges if d > 1
-				for (i = 1; i < d; ++i) {  // star STEs
-					for (j = 0; j <= width; ++j) 
-						ap.addEdge(index[w][i][j][0], index[w][i + 1][j][0]);
-			}	}	
+
+                    /*
+                    // Put STE name into temp string
+                    if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
+                    convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
+                    else if( (j > 9) && (w <= 9)) // If iter smaller than 10, add 0 in front
+                    convert_n << "0" << i_name[0] << i_name[1] << i_name[2] << i_name[3];
+                    else if( (j <= 9) && (w > 9)) // If width smaller than 10, add 0 in front
+                    convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+                    else  //If width and iter smaller than 10, add 0 in front of both
+                    convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+                    */
 
 
-			// *** SUBSTITUTION edges *** //
-			for (i = 0; i < d; ++i) { // char STEs
-				for (j = 1; j < width; ++j) 
-					ap.addEdge(index[w][i][j][1], index[w][i+1][j+1][0]);
-			}	
-			if (d > 1) { // Only use these edges if d > 1
-				for (i = 1; i < d; ++i) { // star STEs
-					for (j = 0; j < width; ++j) 
-						ap.addEdge(index[w][i][j][0], index[w][i + 1][j + 1][0]);
-			}	}	
+                    if (j <= 9) // If width smaller than 10, add 00 in front
+                        temp_n << "00" << i_name[2];
+                    else if ( (j > 9) || (j <= 99))  // If 10 or higher add 0 in front
+                        temp_n << "0" << i_name[2];
+                    else // If 100 or higher don't add any 0's in front
+                        temp_n << i_name[2];
+                    width_name = temp_n.str(); // Copy name into width_name var
+                    //cout << "  width_name: " << width_name << endl;
+                    temp_n = ostringstream(); // Clear temp stream string
 
 
-			// *** DELETE+MATCH edges *** //
-			for (i = 0; i < d; ++i) { // Only use these edges if d > 1
-				for (j = 1; j <= (width - 2); ++j)  // char STEs
-						ap.addEdge(index[w][i][j][1], index[w][i + 1][j + 2][1]);
-			} 
-			if (d > 1) { // Only use these edges if d > 1
-				for (i = 1; i < d; ++i) { // star STEs
-					for (j = 0; j <= width-d; ++j) 
-						ap.addEdge(index[w][i][j][0], index[w][i + 1][j + 2][1]);
-			}	}
+                    if (w <= 9) // If width smaller than 10, add 00 in front
+                        temp_n << "00" << i_name[0];
+                    else if ( (w > 9) || (w <= 99)) // If 10 or higher add 0 in front
+                        temp_n << "0" << i_name[0];
+                    else // If 100 or higher don't add any 0's in front
+                        temp_n << i_name[0];
+                    iter_name = temp_n.str(); // Copy name into iter_name var
+                    //cout << "  iter_name: " << iter_name << endl;
+                    temp_n = ostringstream(); // Clear temp stream string
+
+                    // Put STE name into temp string
+                    convert_n << iter_name << i_name[1] << width_name << i_name[3];
+
+                    STE_name = convert_n.str(); // Copy STE name into STE_name var
+                    //cout << "  char STE name: " << STE_name << endl;
+
+                    convert_n = ostringstream(); // Clear temp stream string
+                    STE_symbol = p[j-1]; // Get STE symbol from p string
+
+                    //cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
+
+                    if (STE_symbol.compare(blank) == 0 ){ // Check for blank spaces
+                        cout << "\n  ERROR: String pattern cannot contain blank spaces!" << endl;
+                        cout << "  Pattern[" << w+1 << "] character[" << j << "] = [" << STE_symbol << "]" << endl;
+                        exit(EXIT_FAILURE);
+                    }
+
+                    STE_symbol = "["+STE_symbol+"]"; // Add brackets around character
+
+                    //cout << "  STE char symbol =  [" << STE_symbol << "]" << endl;
+                    //cout << "  blank =  [" << blank << "]" << endl;
 
 
-			// *** DELETE+SUBSTITUTION edges *** //
-			if (d > 1) { // Only use these edges if d > 1
-				for (i = 0; i <= (d - 2); ++i) { // char STEs
-					for (j = 1; j <= (width - d); ++j)
-						ap.addEdge(index[w][i][j][1], index[w][i + 2][j + 2][0]);
-			}	}
-			if (d > 2){ // Only use these edges if d > 2
-				for (i = 1; i < d-2; ++i) { // star STEs
-					for (j = 0; j < width; ++j)
-						ap.addEdge(index[w][i][j][0], index[w][i + 2][j + 2][0]);
-			}	}
+                    if (j == i+1)  // Set starting and late start blocks
+                        // Make new STE with name, symbol, and start values
+                        index[w][i][j][1] = new STE(STE_name, STE_symbol, start);
 
-		}
+                    else  // Set non-starting blocks
+                        // Make new STE with name, symbol, and start values
+                        index[w][i][j][1] = new STE(STE_name, STE_symbol, off);
+
+                }	}	
+
+            //Populate star STEs  - index [w][y][x][0]
+            for (i = 1; i <= d; ++i) {// loop over edit distance
+                for (j = 0; j <= width; ++j) { // loop over width
+
+                    // Create STE name
+                    i_name[0] = w; i_name[1] = i; i_name[2] = j; i_name[3] = 0; 
+
+                    /*
+                    // Put STE name into temp string
+                    if ( (j > 9) && (w > 9)) // If 10 or higher don't add 0 in front
+                    convert_n << i_name[0] << i_name[1] << i_name[2] << i_name[3];
+                    else if( (j > 9) && (w <= 9)) // If iter smaller than 10, add 0 in front
+                    convert_n << "0" << i_name[0] << i_name[1] << i_name[2] << i_name[3];
+                    else if( (j <= 9) && (w > 9)) // If width smaller than 10, add 0 in front
+                    convert_n << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+                    else  //If width and iter smaller than 10, add 0 in front of both
+                    convert_n << "0" << i_name[0] << i_name[1] << "0" << i_name[2] << i_name[3];
+                    */
+
+                    if (j <= 9) // If width smaller than 10, add 00 in front
+                        temp_n << "00" << i_name[2];
+                    else if ( (j > 9) || (j <= 99))  // If 10 or higher add 0 in front
+                        temp_n << "0" << i_name[2];
+                    else // If 100 or higher don't add any 0's in front
+                        temp_n << i_name[2];
+                    width_name = temp_n.str(); // Copy name into width_name var
+                    //cout << "  width_name: " << width_name << endl;
+                    temp_n = ostringstream(); // Clear temp stream string
+
+
+                    if (w <= 9) // If width smaller than 10, add 00 in front
+                        temp_n << "00" << i_name[0];
+                    else if ( (w > 9) || (w <= 99)) // If 10 or higher add 0 in front
+                        temp_n << "0" << i_name[0];
+                    else // If 100 or higher don't add any 0's in front
+                        temp_n << i_name[0];
+                    iter_name = temp_n.str(); // Copy name into iter_name var
+                    //cout << "  iter_name: " << iter_name << endl;
+                    temp_n = ostringstream(); // Clear temp stream string
+
+
+                    // Put STE name into temp string
+                    convert_n << iter_name << i_name[1] << width_name << i_name[3];
+					
+                    STE_name = convert_n.str(); // Clear temp stream string
+                    //cout << "  star STE name: " << STE_name << endl;
+					
+
+                    convert_n = ostringstream(); // clear stream string
+
+                    if ((i == 1) && (j == 0)) // Set simple starting error block
+                        index[w][i][j][0] = new STE(STE_name, "*", start);
+
+                    else if (j == i)  // Set starting error blocks
+                        index[w][i][j][0] = new STE(STE_name, "*", start);
+
+                    else  // Set non-starting blocks
+                        index[w][i][j][0] = new STE(STE_name, "*", off);
+                }	}	
+
+
+            /*---------------------------
+              Set Reporting STEs
+              ---------------------------*/
+            //Set reporting char STEs - index [y][x][1]
+            int rep_dist = width-d; // Make and set reporting distance var for chars
+
+            for (i = 0; i <= d; ++i) {
+                for (j = rep_dist; j <= width; ++j) 
+                    index[w][i][j][1]->setReporting(true);
+                ++rep_dist; // increase report distance for next row
+            }
+            
+            //Set reporting star STEs  - index [y][x][0]
+            rep_dist = width-d+1; // Set reporting distance var for stars
+            for (i = 1; i <= d; ++i) {
+                for (j = rep_dist; j <= width; ++j) 
+                    index[w][i][j][0]->setReporting(true);
+                ++rep_dist; // increase report distance for next row
+            }
+
+            /*---------------------------
+              Add STEs to data structure
+              ---------------------------*/
+            // char STEs
+            for (i = 0; i <= d; ++i) {
+                for (j = 1; j <= width; ++j) 
+                    ap.rawAddSTE(index[w][i][j][1]);
+            }	
+            // star STEs
+            for (i = 1; i <= d; ++i) {
+                for (j = 0; j <= width; ++j) 
+                    ap.rawAddSTE(index[w][i][j][0]);
+            }	
+
+
+            /*---------------------------
+             * Add edges between STEs
+             ---------------------------*/
+            // *** MATCH edges *** //
+            for (i = 0; i <= d; ++i) { // char STEs
+                for (j = 1; j < width; ++j) 
+                    ap.addEdge(index[w][i][j][1], index[w][i][j+1][1]);
+            }	
+            for (i = 1; i <= d; ++i) { //star STEs
+                for (j = 0; j < width; ++j) 
+                    ap.addEdge(index[w][i][j][0], index[w][i][j + 1][1]);
+            }	
+
+
+            // *** INSERTION edges *** //
+            for (i = 0; i < d; ++i) { // char STEs
+                for (j = 1; j <= width; ++j) 
+                    ap.addEdge(index[w][i][j][1], index[w][i+1][j][0]);
+            }	
+            if (d > 1) { // Only use these edges if d > 1
+                for (i = 1; i < d; ++i) {  // star STEs
+                    for (j = 0; j <= width; ++j) 
+                        ap.addEdge(index[w][i][j][0], index[w][i + 1][j][0]);
+                }	}	
+
+
+            // *** SUBSTITUTION edges *** //
+            for (i = 0; i < d; ++i) { // char STEs
+                for (j = 1; j < width; ++j) 
+                    ap.addEdge(index[w][i][j][1], index[w][i+1][j+1][0]);
+            }	
+            if (d > 1) { // Only use these edges if d > 1
+                for (i = 1; i < d; ++i) { // star STEs
+                    for (j = 0; j < width; ++j) 
+                        ap.addEdge(index[w][i][j][0], index[w][i + 1][j + 1][0]);
+                }	}	
+
+
+            // *** DELETE+MATCH edges *** //
+            for (i = 0; i < d; ++i) { // Only use these edges if d > 1
+                for (j = 1; j <= (width - 2); ++j)  // char STEs
+                    ap.addEdge(index[w][i][j][1], index[w][i + 1][j + 2][1]);
+            } 
+            if (d > 1) { // Only use these edges if d > 1
+                for (i = 1; i < d; ++i) { // star STEs
+                    for (j = 0; j <= width-d; ++j) 
+                        ap.addEdge(index[w][i][j][0], index[w][i + 1][j + 2][1]);
+                }	}
+
+
+            // *** DELETE+SUBSTITUTION edges *** //
+            if (d > 1) { // Only use these edges if d > 1
+                for (i = 0; i <= (d - 2); ++i) { // char STEs
+                    for (j = 1; j <= (width - d); ++j)
+                        ap.addEdge(index[w][i][j][1], index[w][i + 2][j + 2][0]);
+                }	}
+            if (d > 2){ // Only use these edges if d > 2
+                for (i = 1; i < d-2; ++i) { // star STEs
+                    for (j = 0; j < width; ++j)
+                        ap.addEdge(index[w][i][j][0], index[w][i + 2][j + 2][0]);
+                }	}
+
+        }
 
 	patfile.close(); // Close pattern file
 
-    /*---------------------------------
-     * Export automaton as ANML file
-     ---------------------------------*/
+
+        if(reduce){
+            // If we only care about scoring *within* an edit distance,
+            //   we can cut the corners of the widget
+            //   we only want the first match, not the best match
+            //   therefore, kill all states that only have reporting parents
+            queue<Element*> toRemove;
+            for(auto el : ap.getElements()){
+
+                bool all_parents_report = true;
+                for(auto in : el.second->getInputs()) {
+                    if(!ap.getElement(in.first)->isReporting()){
+                        all_parents_report = false;
+                    }
+                }
+
+                if(all_parents_report)
+                    toRemove.push(el.second);
+            }
+
+            // Remove elements of automata where all parents report
+            while(!toRemove.empty()){
+                ap.removeElement(toRemove.front());
+                toRemove.pop();
+            }
+
+            // We also don't want report->report edges
+            for(auto el : ap.getElements()){
+
+                // find report to report edges
+                queue<Element*> badEdges;
+                for(auto in : el.second->getInputs()) {
+                    if(ap.getElement(in.first)->isReporting()){
+                        badEdges.push(ap.getElement(in.first));
+                    }
+                }
+
+                // remove report to report edges
+                while(!badEdges.empty()){
+                    ap.removeEdge(badEdges.front(), el.second);
+                    badEdges.pop();
+                }
+            }
+
+            // Now that we've removed redundant reports, we can
+            //   remove redundant starts. Any node that enters
+            //   into a start state should be removed
+        
+            // Remove all incoming edges to starts
+            for(Element * start : ap.getStarts()){
+                queue<Element*> badEdges;
+                for(auto in : start->getInputs()){
+                    badEdges.push(ap.getElement(in.first));
+                }
+
+                // remove start incoming edges
+                while(!badEdges.empty()){
+                    ap.removeEdge(badEdges.front(), start);
+                    badEdges.pop();
+                }
+
+            }
+        
+            // once these edges are gone, do a dead code elimination pass
+            ap.eliminateDeadStates();
+
+        }
+        
+        // END WADDEN
+        
+        /*---------------------------------
+         * Export automaton as ANML file
+         ---------------------------------*/
 	string ANMLname = "leven_";
 	ANMLname += outname + ".anml";
 	ap.automataToANMLFile(ANMLname);
     	cout <<"\n  ANML file created = '" << ANMLname << "'"<< endl;
 
-    /*---------------------------------
-     * Export automaton as MNRL file
-     ---------------------------------*/
+        /*---------------------------------
+         * Export automaton as MNRL file
+         ---------------------------------*/
 	string MNRLname = "leven_";
 	MNRLname += outname + ".mnrl";
 	ap.automataToMNRLFile(MNRLname);
     	cout <<"  MNRL file created = '" << MNRLname << "'"<< endl;
 
-return 0;
-}
+        return 0;
+    }
 
-/***************************
-*	Other input errors
-***************************/
-else 	
+    /***************************
+     *	Other input errors
+     ***************************/
+    else 	
 	usage(argv[0]); // [Print help doc] //
 
-return 0;
+    return 0;
 }
 
 
@@ -508,29 +665,29 @@ return 0;
 ***************************/
 string randDNA (int width){ // DNA RAND funct
 
-	int i, j; // set counting vars
+    int i, j; // set counting vars
 
-	string prand; // make pattern string var
-	int DNAval; // set var for random number assignment
+    string prand; // make pattern string var
+    int DNAval; // set var for random number assignment
 
-        	for(j = 0; j < width; ++j){ // Fill with random string sequence
-            	DNAval = (rand() % 4); // set DNA value to a random nucleobase
-            	switch(DNAval) {
-					case 0 : // adenine
-						prand += 'A';
-						break;
-					case 1 : // thymine
-						prand += 'T';
-						break;
-					case 2 : // guanine
-						prand += 'G';
-						break;
-					default: // cytosine
-						prand += 'C';
-						break;
-			}	}
+    for(j = 0; j < width; ++j){ // Fill with random string sequence
+        DNAval = (rand() % 4); // set DNA value to a random nucleobase
+        switch(DNAval) {
+        case 0 : // adenine
+            prand += 'A';
+            break;
+        case 1 : // thymine
+            prand += 'T';
+            break;
+        case 2 : // guanine
+            prand += 'G';
+            break;
+        default: // cytosine
+            prand += 'C';
+            break;
+        }	}
 
-return prand;
+    return prand;
 }
 
 
@@ -539,29 +696,29 @@ return prand;
 ***************************/
 string randalpha (int width){ // Alpha-numeric RAND funct
 
-	int i, j; // set counting vars
+    int i, j; // set counting vars
 
-	string prand; // make pattern string var
-	int alphanumval; // set var for random number assignment
-	int alphanum[62]; // vector of alpha numeric ACCII codes
+    string prand; // make pattern string var
+    int alphanumval; // set var for random number assignment
+    int alphanum[62]; // vector of alpha numeric ACCII codes
 
-	for(i=0; i<10; ++i) // Add 0-9 chars
-		alphanum[i] = i+48;
-	for (i=0; i<26; ++i) // Add uppercase letters
-		alphanum[i+10] = i+65;
-	for (i=0; i<26; ++i)  // Add lowercase letters
-		alphanum[i+36] = i+97;	
-	for(j = 0; j < width; ++j)// Fill with random string sequence
-		prand  += char(alphanum[(rand() % 62)]); // set alphanum value to a random char from array
+    for(i=0; i<10; ++i) // Add 0-9 chars
+        alphanum[i] = i+48;
+    for (i=0; i<26; ++i) // Add uppercase letters
+        alphanum[i+10] = i+65;
+    for (i=0; i<26; ++i)  // Add lowercase letters
+        alphanum[i+36] = i+97;	
+    for(j = 0; j < width; ++j)// Fill with random string sequence
+        prand  += char(alphanum[(rand() % 62)]); // set alphanum value to a random char from array
 
-return prand;
+    return prand;
 }
 
 
 void usage(char * argv) { // Usage information funct
 
     cout <<"\n  USAGE:  "
-	<< argv << " [MODE] [string/file/width] [edit dist] [r DNA or alphanum] [r iterations]"<< endl;
+         << argv << " [MODE] [string/file/width] [edit dist] [r DNA or alphanum] [r iterations]"<< endl;
 
     cout <<"\n\t       [MODE]:\t"<< "Choose mode of operation:"<< endl;
     cout <<"\t\t        's' for STRING - Enter pattern string directly in command line for single Lev automaton"<< endl;
@@ -597,3 +754,5 @@ void usage(char * argv) { // Usage information funct
     cout <<"\t\t"<< "This will make 2 random lev automata"<< endl;
     cout <<"\t\t"<< "each 5 alpha-numeric chars long with a lev dist of 2"<< endl;
 }
+
+

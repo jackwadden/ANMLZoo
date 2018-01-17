@@ -48,7 +48,7 @@ STE's only output a logical yes/no match for the character they are looking for.
 
 #### Leven Executable Levenshtein Example
 
-The above Levenshtein automata can be easily created using the **leven** executable program. The pattern string *wahoo* and edit distance *d*=*2* are typed into the command line like this: `leven s wahoo 2`. This will result in a ANML file for use in the AP. It can also be viewed using Dan Kramp's <a href="http://automata9.cs.virginia.edu:9090/#">ANML Viewer</a> from the University of Virginia (**Figure 3**). 
+The above Levenshtein automata can be easily created using the **leven** executable program. The pattern string *wahoo* and edit distance *d*=*2* are typed into the command line like this: `leven s wahoo 2`. This will result in a ANML file for use in the AP. It can also be viewed using Dan Kramp's <a href="https://github.com/dankramp/AutomataLab">AutomataLab</a> viewer from the University of Virginia. (**Figure 3**). 
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/jackwadden/ANMLZoo/master/Levenshtein/images/ANMLviewer_wahoo_d2.png" width="833" height="391" alt="leven_STE_Viewer_wahoo_d2">  
