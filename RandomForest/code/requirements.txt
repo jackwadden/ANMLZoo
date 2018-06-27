@@ -1,0 +1,10 @@
+optparse
+logging
+pickle
+NumPy
+termcolor
+xmltodict
+enum
+SciPy
+jsonschema
+scikit-learn

@@ -14,8 +14,8 @@
     email: tjt7a@virginia.edu
     University of Virginia
     ----------------------
-    15 January 2018
-    Version 0.3
+    12 June 2018
+    Version 0.4
 
     *Definitions*
     ----------------------
@@ -49,7 +49,7 @@ from tools.io import *
 from tools.circuitTools import generate_circuits
 
 # MNRL Tools
-from tools.mnrltools import *
+#from tools.mnrltools import *
 
 # Turn on logging; let's see what all is going on
 logging.basicConfig(format='%(asctime)s : %(message)s', level=logging.INFO)
@@ -76,9 +76,9 @@ if __name__ == '__main__':
     parser.add_option('--unrolled', action='store_true', default=False, dest='unrolled',
                       help='Set to get unrolled chains (no loops)')
 
-    parser.add_option('--mnrl', action='store_true', default=False, dest='mnrl',
-                      help='Generate MNRL chains (with floating point thresholds \
-                      and one STE per feature)')
+    # parser.add_option('--mnrl', action='store_true', default=False, dest='mnrl',
+    #                   help='Generate MNRL chains (with floating point thresholds \
+    #                   and one STE per feature)')
 
     parser.add_option('--short', action='store_true', default=False, dest='short',
                       help='Make a short version of the input (100 samples)')
@@ -210,24 +210,24 @@ if __name__ == '__main__':
         chain.set_chain_id(chain_id)
 
     # Now, once we have our chains, we can make our mnrl chains (which contain thresholds)
-    if options.mnrl:
-        mnrl_network = make_mnrl_chains(chains)
-
-        mnrl_network.exportToFile("chains.mnrl")
-
-        X_test, y_test = load_test("testing_data.pickle")
-
-        # Catch
-        if not X_test or not y_test:
-            raise ValueError
-
-        np.savetxt("testing.csv", X_test, delimiter=',', fmt='%1.4e')
-
-        if options.verbose:
-            logging.info("Done generating MNRL and testing output files")
-
-        # We stop here with MNRL
-        exit(0)
+    # if options.mnrl:
+    #     mnrl_network = make_mnrl_chains(chains)
+    #
+    #     mnrl_network.exportToFile("chains.mnrl")
+    #
+    #     X_test, y_test = load_test("testing_data.pickle")
+    #
+    #     # Catch
+    #     if not X_test or not y_test:
+    #         raise ValueError
+    #
+    #     np.savetxt("testing.csv", X_test, delimiter=',', fmt='%1.4e')
+    #
+    #     if options.verbose:
+    #         logging.info("Done generating MNRL and testing output files")
+    #
+    #     # We stop here with MNRL
+    #     exit(0)
 
     # Sort the thresholds for all features
     for f, t in threshold_map.items():
@@ -294,5 +294,8 @@ if __name__ == '__main__':
     # If using quickrank, our features are based at index = 1, instead of 0
     ft.input_file(X_test, "input_file.bin", onebased=quickrank,
                   short=options.short, delimited=True)
+
+    # We can use this later to generate input files
+    dump_feature_table(ft, "feature_table.pickle")
 
     logging.info("Done!")

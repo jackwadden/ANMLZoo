@@ -23,3 +23,20 @@ def load_test(testfile):
         x_test, y_test = pickle.load(f)
 
     return x_test, y_test
+
+# Dump feature table
+def dump_feature_table(ft, ft_filename):
+
+    # Dump the feature table to a file for labeling
+    with open(ft_filename, 'wb') as f:
+        pickle.dump(ft, f)
+
+
+# Load feature table
+def load_feature_table(ft_filename):
+
+    # Dump the feature table to a file for labeling
+    with open(ft_filename, 'rb') as f:
+        ft = pickle.load(f)
+
+    return ft

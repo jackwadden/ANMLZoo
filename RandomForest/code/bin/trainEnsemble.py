@@ -8,8 +8,8 @@
     email: tjt7a@virginia.edu
     University of Virginia
     ----------------------
-    16 January 2018
-    Version 0.3
+    26 June 2018
+    Version 0.4
 """
 
 # Support Imports
@@ -93,6 +93,13 @@ def dump_test(x_test_, y_test_, testfile_):
     with open(testfile_, 'wb') as f:
 
         pickle.dump((x_test_, y_test_), f)
+
+# Dump train data
+def dump_train(x_train, y_train, trainfile_):
+
+    with open(trainfile_, 'wb') as f:
+
+        pickle.dump((x_train, y_train), f)
 
 
 # Write report out to file
@@ -355,6 +362,9 @@ if __name__ == '__main__':
 
     # Write out the test data for testing with the automata
     dump_test(X_test, y_test, "testing_data.pickle")
+
+    # Write out the training data
+    dump_train(X_train, y_train, "training_data.pickle")
 
     # Print throughput results for the CPU after 100 testing loops
     print_throughput(model, X_test, 100)
