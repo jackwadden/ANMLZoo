@@ -1,6 +1,6 @@
 # ANMLZoo Automata Processing Benchmark Suite
 
-*IMPORTANT:* if using ANMLZoo for experiments, please see ERRATA below...
+*IMPORTANT:* this benchmark suite has been obsoleted with the new application-focused [AutomataZoo](https://github.com/tjt7a/AutomataZoo). If using ANMLZoo for experiments, please see ERRATA below...
 
 ANMLZoo is under continual development. Please make sure to use the proper [release](https://github.com/jackwadden/ANMLZoo/releases) for comparisons to prior work.
 
